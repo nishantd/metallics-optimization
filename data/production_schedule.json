@@ -1,0 +1,5 @@
+[{"heat_seq":1, "heat_id":"heat-1", "steel_grade":"ST1", "required_weight":1000, "chemistry":{"cu_pct":0.1}},
+ {"heat_seq":2, "heat_id":"heat-12", "steel_grade":"ST1", "required_weight":1500, "chemistry":{"cu_pct":0.1}}
+]
+
+

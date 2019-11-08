@@ -1,0 +1,3 @@
+[{"scrap_type":"bushling", "order_date":"20190405", "status":"delivered", "weight":6000, "price_per_ton":100},
+ {"scrap_type":"pig_iron", "order_date":"20190605", "status":"delivered", "weight":10000, "price_per_ton":140}
+]
