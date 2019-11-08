@@ -2,7 +2,7 @@
 
 See the initial checkins for examples of the data. We will need to add more to the data, but not more than 15/20 lines of data for each file. We can discuss the data further. Idea is not to create very detailed data, just enough to make things interesting.
 
-## What happens
+## Proceeding
 
 - Form 2 or more teams.
 - Each team has members from Noodle and SMS.
