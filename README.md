@@ -20,15 +20,10 @@ See the initial checkins for examples of the data. We will need to add more to t
 
 ## What can we create?
 
-You should do something with the data!
+The final output is a heat schedule. You can add visualizations or complement the final output in any way you want.
 
-- that can be a machine learning model that predicts when the next scrap order arrives
-- a dashboard that visualises the sequences
-- a tool that detects NaNs in the data
-- a tool that will allow you to replace NaNs in the data
-- a dashboard that visualizes the size of the pile on the scrapyard
-... 
+## Timing
 
-Teams will have 48 hours total from start to finish. We can let Dirk judge the winning team - they get lunch from the other team.
+Teams will have from Monday 18th Nov 1500 UTC to Tuesday 19th Nov 2000 UTC. We can let Dirk judge the winning team - they get lunch from the other team.
 
 
