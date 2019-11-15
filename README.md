@@ -17,6 +17,17 @@ See the initial checkins for examples of the data. We will need to add more to t
 - Teams can create simple text output to stdout. They can create a little webapp to give output as a web page. They can really do whatever they want.
 - The code must run and produce the output based on the data. We will change the data and see what happens to the output.
 
+## What can we create?
+
+You should do something with the data!
+
+- that can be a machine learning model that predicts when the next scrap order arrives
+- a dashboard that visualises the sequences
+- a tool that detects NaNs in the data
+- a tool that will allow you to replace NaNs in the data
+- a dashboard that visualizes the size of the pile on the scrapyard
+... 
+
 Teams will have 48 hours total from start to finish. We can let Dirk judge the winning team - they get lunch from the other team.
 
 
