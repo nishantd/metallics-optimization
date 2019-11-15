@@ -16,6 +16,7 @@ See the initial checkins for examples of the data. We will need to add more to t
 - Teams try to create modules that will actually exist in the real product (at least in terms of calls between them / APIs).
 - Teams can create simple text output to stdout. They can create a little webapp to give output as a web page. They can really do whatever they want.
 - The code must run and produce the output based on the data. We will change the data and see what happens to the output.
+- All code should be placed in public repository, no hidden or proprietary code
 
 ## What can we create?
 
