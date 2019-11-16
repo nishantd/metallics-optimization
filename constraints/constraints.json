@@ -2,6 +2,7 @@
  [
     {"scrap_type":"bushlings", "type":"minimum", "weight":200},
     {"scrap_type":"pig_iron", "type":"minimum", "weight":100}
+    {"scrap_type":"pig_iron", "type":"maximum", "weight":300}
  ],
  "avg_density_constraints_per_steel_grade":
  {"ST1":75, "ST2":64}
