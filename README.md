@@ -8,6 +8,8 @@
 
 - Optimization for the recipes:
   - The only thing being optimized for is scrap cost. We assume there are no other costs.
+  
+- Try to create a solution that at the high level might resemble the actual metallics solution in terms of the components. I.e. Models for Copper and yield estimation, the optimizer that creates recipes and uses the models (or api's to the models) to create recipes, etc.
 
 ### Constraints:
 - See constraints/constraints.json. They are self-explanatory and minimal.
@@ -39,11 +41,11 @@ Should result in a valid scrap recipe schedule in 1_results.json.
 
 - Make any assumptions you want in the interests of getting something done. If you can't get something done, create the simplest (or simplistic) solution, document it as 'to be improved' and move on. If something is not clear, add your assumptions and move forward.
 
-- Create a virtual environment and keep a requirements.txt file so everyone in your team can run the code.
+- Create a python virtual environment and keep a requirements.txt file so everyone in your team can run the code.
 
-- Work from the outside in. Get something working end to end with the API / function calls and function signatures first (mock the data) and then work on implementation.
+- Work from the outside in. Get something working end to end with the API / function calls and function signatures first (mock the returned data) and then work on implementation.
 
-- Any schedule with recipes is better than no schedule.
+- Any schedule with recipes (i.e. a greedy schedule vs optimal) is better than no schedule.
 
 ## What else?
 
