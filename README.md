@@ -11,6 +11,14 @@
   
 - Try to create a solution that at the high level might resemble the actual metallics solution in terms of the components. I.e. Models for Copper and yield estimation, the optimizer that creates recipes and uses the models (or api's to the models) to create recipes, etc.
 
+## Teams
+
+- Team 1: Nishant, Max, Ibrahim
+- Team 2: Rohan, Dehong, Simon
+- Team 3: Ajay, Rashmi, Ashish
+- Team 4: Shyam, Evgenii, Philipp
+- Team 5: Ying, Sebastian, Lena
+
 ### Constraints:
 - See constraints/constraints.json. They are self-explanatory and minimal.
 
@@ -47,6 +55,23 @@ Should result in a valid scrap recipe schedule in 1_results.json.
 
 - Any schedule with recipes (i.e. a greedy schedule vs optimal) is better than no schedule.
 
+## First steps for each team
+
+- (everyone) Send Nishant your github account name so you can become a collaborator on this repo.
+- Decide on the team name.
+- Create a branch that will be your teams 'master'. (team-super-cool-dudes). Make sure everyone can check something into this branch.
+- Go.
+
 ## What else?
 
 Everything else goes. If you have someone interested in creating a UI that shows the schedule or triggers a recalculation of the recipes for a schedule, feel free.
+
+## Afterwards
+
+We want to know
+
+- How you collaborated.
+- What was your high level 'architecture' of the system.
+- What you learnt about the problem.
+- What was emphasised in your solution.
+- Anything else you want to contribute and take forward as we build the actual system.
