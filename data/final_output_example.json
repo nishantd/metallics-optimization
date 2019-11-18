@@ -1,3 +1,4 @@
 [
-    {"heat_seq":61, "heat_id":"heat-601", "steel_grade":"ST1", "predicted_tap_weight":1000, "predicted_chemistry":{"cu_pct":0.095}, "suggested_recipe":{"bushling":300, "pig_iron":200, "municipal_shred":350, "skulls":200}}
+  {"heat_seq":61, "heat_id":"heat-601", "steel_grade":"ST1", "predicted_tap_weight":1000, "predicted_chemistry":{"cu_pct":0.095}, "suggested_recipe":{"bushling":300, "pig_iron":200, "municipal_shred":350, "skulls":200}},
+  {"heat_seq":62, "heat_id":"heat-602", "steel_grade":"ST1", "predicted_tap_weight":1100, "predicted_chemistry":{"cu_pct":0.1}, "suggested_recipe":{"bushling":250, "pig_iron":200, "municipal_shred":300, "skulls":250}}
 ]
