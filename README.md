@@ -8,6 +8,16 @@
 
 - Optimization for the recipes:
   - The only thing being optimized for is scrap cost. We assume there are no other costs.
+  
+- Try to create a solution that at the high level might resemble the actual metallics solution in terms of the components. I.e. Models for Copper and yield estimation, the optimizer that creates recipes and uses the models (or api's to the models) to create recipes, etc.
+
+## Teams
+
+- Team 1: Nishant, Max, Ibrahim
+- Team 2: Rohan, Dehong, Simon
+- Team 3: Ajay, Rashmi, Ashish
+- Team 4: Shyam, Evgenii, Philipp
+- Team 5: Ying, Sebastian, Lena
 
 ### Constraints:
 - See constraints/constraints.json. They are self-explanatory and minimal.
@@ -39,12 +49,29 @@ Should result in a valid scrap recipe schedule in 1_results.json.
 
 - Make any assumptions you want in the interests of getting something done. If you can't get something done, create the simplest (or simplistic) solution, document it as 'to be improved' and move on. If something is not clear, add your assumptions and move forward.
 
-- Create a virtual environment and keep a requirements.txt file so everyone in your team can run the code.
+- Create a python virtual environment and keep a requirements.txt file so everyone in your team can run the code.
 
-- Work from the outside in. Get something working end to end with the API / function calls and function signatures first (mock the data) and then work on implementation.
+- Work from the outside in. Get something working end to end with the API / function calls and function signatures first (mock the returned data) and then work on implementation.
 
-- Any schedule with recipes is better than no schedule.
+- Any schedule with recipes (i.e. a greedy schedule vs optimal) is better than no schedule.
+
+## First steps for each team
+
+- (everyone) Send Nishant your github account name so you can become a collaborator on this repo.
+- Decide on the team name.
+- Create a branch that will be your teams 'master'. (team-super-cool-dudes). Make sure everyone can check something into this branch.
+- Go.
 
 ## What else?
 
 Everything else goes. If you have someone interested in creating a UI that shows the schedule or triggers a recalculation of the recipes for a schedule, feel free.
+
+## Afterwards
+
+We want to know
+
+- How you collaborated.
+- What was your high level 'architecture' of the system.
+- What you learnt about the problem.
+- What was emphasised in your solution.
+- Anything else you want to contribute and take forward as we build the actual system.
