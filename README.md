@@ -1,10 +1,10 @@
 # The hackathon
 
-- Each team must produce recipes for the production schedule of heats (given in data/production_schedule.json).
+- Each team must produce recipes for the production schedule of heats (given in data/?/production_schedule.json).
 
 - The final output must be in the same format as given in data/final_output_example.json. The fields are self explanatory.
 
-- The only data available is in the data directory as described in data/README. Please read this file carefully.
+- The only data available is under the data directory as described in data/README. Please read this file carefully.
 
 - Optimization for the recipes:
   - The only thing being optimized for is scrap cost. We assume there are no other costs.
@@ -13,7 +13,7 @@
 - See constraints/constraints.json. They are self-explanatory and minimal.
 
 ### Copper model:
-The only tramp element being measured and specified in the production schedule is Copper (cu). The only data you have to create a copper model is the history of previous heats (data/previous_heats_with_properties.json). (See data/README.md for more.)
+The only tramp element being measured and specified in the production schedule is Copper (cu). The only data you have to create a copper model is the history of previous heats (data/?/previous_heats_with_properties.json). (See data/README.md for more.)
 
 ## Rules
 
@@ -21,9 +21,9 @@ The only tramp element being measured and specified in the production schedule i
 
 - Each team must create a branch with your team name (i.e. team-funny-geeks) and have everything checked into there.
 
-- There must be a file generate_recipes.py that can be run with a single parameter (the name of the scrap_inventoryX.json file) and should output on stdout valid json for the schedule with recipes (see data/final_output_example.json). For example
+- There must be a file generate_recipes.py that can be run with a single parameter (the name of the data directory i.e. data/1/ or data/2/ etc) and should output on stdout valid json for the schedule with recipes (see data/final_output_example.json). For example
 ```
-python generate_recipes.py data/scrap_inventory1.json > 1_results.json
+python generate_recipes.py data/1/ > 1_results.json
 ```
 Should result in a valid scrap recipe schedule in 1_results.json.
 
