@@ -20,7 +20,7 @@
 - Team 5: Ying, Sebastian, Lena
 
 ### Constraints:
-- See constraints/constraints.json. They are self-explanatory and minimal.
+- See constraints.json in every dataset. They are self-explanatory and minimal.
 
 ### Copper model:
 The only tramp element being measured and specified in the production schedule is Copper (cu). The only data you have to create a copper model is the history of previous heats (data/?/previous_heats_with_properties.json). (See data/README.md for more.)
@@ -51,10 +51,16 @@ Should result in a valid scrap recipe schedule in 1_results.json.
 
 - Create a python virtual environment and keep a requirements.txt file so everyone in your team can run the code.
 
+- Use python3 (in case someone is still on 2.7)
+
 - Work from the outside in. Get something working end to end with the API / function calls and function signatures first (mock the returned data) and then work on implementation.
 
 - Any schedule with recipes (i.e. a greedy schedule vs optimal) is better than no schedule.
 
+- Git strategies:
+  - Use the merge vs rebase git technique. I.e. git fetch, git merge.
+  
+ 
 ## First steps for each team
 
 - (everyone) Send Nishant your github account name so you can become a collaborator on this repo.
