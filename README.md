@@ -19,7 +19,10 @@ The only tramp element being measured and specified in the production schedule i
 
 - No existing Noodle or SMS code can be used. Assume everything in this repo is public.
 
-- Each team must create a branch with your team name (i.e. team-funny-geeks) and have everything checked into there.
+- GIT policies:
+  - NO CHECKINS into the master branch.
+  - Create a branch for your team. I.e. team-funny-geeks. Use this as your teams 'master'.
+  - For your own work, if you want to push additional branches to the repo, create branches with your name (i.e. nishant-create-cost-estimator). 
 
 - There must be a file generate_recipes.py that can be run with a single parameter (the name of the scrap_inventoryX.json file) and should output on stdout valid json for the schedule with recipes (see data/final_output_example.json). For example
 ```
