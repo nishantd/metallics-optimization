@@ -9,7 +9,7 @@ The current scrap inventory that can be used. There are three different datasets
 ## previous_heats_with_properties.json:
 
 This is a history of previous heats. The columns are as below.
-tap_weight: The weight of the molten metal that resulted from the heat. (Remember there is no heel - only slag and tap).
+tap_weight: The weight of the molten metal that resulted from the heat. (There is no heel - only slag and tap).
 chemistry: The measured chemistry of the molten metal. (In this case only cu).
 actual_recipe: The actual weights of the commodities used in this heat. This is not the intended weights.
 
