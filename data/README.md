@@ -1,3 +1,5 @@
+# Information about the files
+
 ## production_schedule.json:
 
 The heats for which recipes are required. The chemistry specification contains the maximum allowable percent of tramp elements. In this dataset, the only tramp element we are concerned about is cu (copper).
@@ -17,4 +19,9 @@ actual_recipe: The actual weights of the commodities used in this heat. This is 
 
 Orders for scrap. Note that the total of the orders may not equal the inventory. These are the available orders. There may have been more orders that we don't have access to, so inventory could be more or less than the totals in these orders. These orders should be used to get scrap price for optimization.
 
+## final_output_example.json
+
+Example of the final output.
+The predicted fields are your predications.
+The suggested_recipe is your suggested recipe for this heat.
 
