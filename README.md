@@ -45,3 +45,6 @@ Should result in a valid scrap recipe schedule in 1_results.json.
 
 - Any schedule with recipes is better than no schedule.
 
+## What else?
+
+Everything else goes. If you have someone interested in creating a UI that shows the schedule or triggers a recalculation of the recipes for a schedule, feel free.
