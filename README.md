@@ -13,7 +13,7 @@
 
 ## Teams
 
-- Team 1: Nishant, Max, Ibrahim
+- Team 1 "drop-tables": Nishant, Max, Ibrahim
 - Team 2: Rohan, Dehong, Simon
 - Team 3: Ajay, Rashmi, Ashish
 - Team 4: Shyam, Evgenii, Philipp
