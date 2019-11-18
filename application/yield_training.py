@@ -1,6 +1,7 @@
 import pandas as pd
 import pickle
-from sklearn.linear_model import LinearRegression()
+from sklearn.linear_model import LinearRegression
+import json
 
 commodities = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
 training_data = '../data/1/previous_heats_with_properties.json'
@@ -9,10 +10,13 @@ def yield_model(training_data):
     """
     yield_estimation: This function trains the yield estimation model
     split into test/train
+    
+    input: training dataframe
+    output: fit model
     """
     
     model = LinearRegression()
-    model = model.fit(training_data[commodities], training_data['yield'])
+    model = model.fit(training_data[[c+'_norm' for c in commodities]], training_data['yield'])
 
     return model
 
@@ -29,8 +33,15 @@ def calculate_yield(training):
     return training
 
 def normalize_commodities(training_data):
+    """
+    normalize_commodities: normalize the commodities so we are training on percentage of commodity
+    
+    input: training dataframe
+    output: training dataframe with the commodities normalized 
+    """
     for c in commodities:
         training_data[c+'_norm'] = training_data[c]/training_data[commodities].sum(axis=1)
+        
     return training_data
 
 def load_training_data(training_data):
@@ -54,6 +65,7 @@ def load_training_data(training_data):
             training.loc[i, c] = training.loc[i, 'actual_recipe'][c]
     training = calculate_yield(training)
     training = normalize_commodities(training)
+    
     return training
 
 def run_training(training_data):
@@ -75,8 +87,12 @@ def run_training(training_data):
 
 def save_model(model):
     """
-    save_model: 
+    save_model: save the model as a pickle file
+    
+    input: fitted model
+    output: saved pickle file 
     """
+    
     pickle_out = open("models/yield_model.pickle","wb")
     pickle.dump(model, pickle_out)
     pickle_out.close()
@@ -84,6 +100,7 @@ def save_model(model):
     return
 
 if __name__ == '__main__':
+    
     model = run_training(training_data)
     save_model(model)
     print("training complete")
