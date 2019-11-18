@@ -46,3 +46,15 @@ class CuEstimator:
 
         values = self._estimators[steel_grade]
         return self.calc_function(values, row)
+
+    def get_estimated_cu_values(self, steel_grade: str):
+        if steel_grade not in self._estimators:
+            raise ValueError(f'Steel grade {steel_grade} has no estimator yet.'
+                             f'Use `fit` method first.')
+        values = self._estimators[steel_grade]
+        return {
+            'bushling': values[0],
+            'pig_iron': values[1],
+            'municipal_shred': values[2],
+            'skulls': values[3]
+        }
