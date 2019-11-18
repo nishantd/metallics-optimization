@@ -1,0 +1,5 @@
+[{"scrap_type":"bushling", "status":"on_hand", "weight":8000},
+ {"scrap_type":"pig_iron", "status":"on_hand", "weight":5000},
+ {"scrap_type":"municipal_shred", "status":"on_hand", "weight":3000},
+ {"scrap_type":"skulls", "status":"on_hand", "weight":20000}
+]

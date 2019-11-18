@@ -1,22 +1,44 @@
 # The hackathon
 
-See the initial checkins for examples of the data. We will need to add more to the data, but not more than 15/20 lines of data for each file. We can discuss the data further. Idea is not to create very detailed data, just enough to make things interesting.
+Each team must produce recipes for the production schedule of heats (given in data/production_schedule.json).
 
-## Proceeding
+The final output must be in the same format as given in data/final_output_example.json. The fields are self explanatory.
 
-- Form 2 or more teams.
-- Each team has members from Noodle and SMS.
-- Give each team their own directory in which to checkin code.
-- No proprietary code. This will be a private repo but at this stage all code is assumed to be public.
+The only data available is in the data directory as described in data/README. Please read this file carefully.
+
+Optimization for the recipes:
+The only thing being optimized for is scrap cost. We assume there are no other costs.
+
+Constraints:
+See constraints/constraints.json. They are self-explanatory and minimal.
+
+Copper model:
+The only tramp element being measured and specified in the production schedule is Copper (cu). The only data you have to create a copper model is the history of previous heats (data/previous_heats_with_properties.json). (See data/README.md for more.)
+
+## Rules
+
+### No existing Noodle or SMS code can be used. Assume everything in this repo is public.
+
+### Each team must create a branch with your team name (i.e. team-funny-geeks) and have everything checked into there.
+
+## There must be a file generate_recipes.py that can be run with a single parameter (the name of the scrap_inventoryX.json file) and should output on stdout valid json for the schedule with recipes (see data/final_output_example.json). For example
+```
+python generate_recipes.py data/scrap_inventory1.json > 1_results.json
+```
+Should result in a valid scrap recipe schedule in 1_results.json.
+
+### Work with your teams not across teams (i.e. within Noodle or SMS) for the duration of the hackathon in the spirit of the hackathon.
+
+### You can use any public libraries and tools.
 
 
-## Desired outcome
+## Helpful suggestions
 
-- Team should come up with some approximation to the actual application we are trying to build. I.e. The output should be a heat schedule with a suggested scrap mix + a Value-in-use dollar amount. We can specify a Value-in-use function or leave it to the teams.
-- Teams try to create modules that will actually exist in the real product (at least in terms of calls between them / APIs).
-- Teams can create simple text output to stdout. They can create a little webapp to give output as a web page. They can really do whatever they want.
-- The code must run and produce the output based on the data. We will change the data and see what happens to the output.
+### Make any assumptions you want. If you can't get something done, create the simplest (or simplistic) solution, document it as 'to be improved' and move on. If something is not clear, add your assumptions and move forward.
 
-Teams will have 48 hours total from start to finish. We can let Dirk judge the winning team - they get lunch from the other team.
+### Create a virtual environment and keep a requirements.txt file so everyone in your team can run the code.
 
+### Work from the outside in. Get something working end to end with the API / function calls and function signatures first (mock the data) and then work on implementation.
+
+### Any schedule with recipes is better than no schedule.
 
