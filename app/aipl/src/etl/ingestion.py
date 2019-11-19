@@ -1,4 +1,4 @@
-import json
+import pandas as pd
 import sys
 
 
@@ -12,38 +12,28 @@ DELIVERED = "delivered"
 ON_HAND = "on_hand"
 
 
-def get_scrap_purchases(order_data_file):
+def get_scrap_prices(order_data_file):
     """Load scrap orders - we are not messing with dates currently and
     are assuming all deliveries are unused
 
     Parameters:
         order_data_file: Location of scrap orders data
     """
+    # Load scrap orders that have already been delivered
+    orders = pd.read_json(order_data_file)
+    orders = orders[orders.status == DELIVERED]
 
-    with open(order_data_file) as orders_file:
-        orders = json.load(orders_file)
-
-    busheling_orders = []
-    pigiron_orders = []
-    shred_orders = []
-    skulls_orders = []
-
-    for o in orders:
-        if o["status"] == DELIVERED:
-            if o["scrap_type"] == BUSHELING:
-                busheling_orders.append(o["price_per_ton"])
-            elif o["scrap_type"] == PIG_IRON:
-                pigiron_orders.append(o["price_per_ton"])
-            elif o["scrap_type"] == SHRED:
-                shred_orders.append(o["price_per_ton"])
-            elif o["scrap_type"] == SKULLS:
-                skulls_orders.append(o["price_per_ton"])
+    # Get average prices per scrap type from scrap orders
+    busheling_price = orders[orders.scrap_type == BUSHELING].price_per_ton.mean()
+    pigiron_price = orders[orders.scrap_type == PIG_IRON].price_per_ton.mean()
+    shred_price = orders[orders.scrap_type == SHRED].price_per_ton.mean()
+    skulls_price = orders[orders.scrap_type == SKULLS].price_per_ton.mean()
 
     return {
-        BUSHELING: busheling_orders,
-        PIG_IRON: pigiron_orders,
-        SHRED: shred_orders,
-        SKULLS: skulls_orders,
+        BUSHELING: busheling_price,
+        PIG_IRON: pigiron_price,
+        SHRED: shred_price,
+        SKULLS: skulls_price,
     }
 
 
@@ -55,40 +45,29 @@ def get_scrap_inventory(inv_data_file, order_data_file):
         inv_data_file: Location of scrap inventory data
         order_data_file: Location of scrap orders data
     """
+    # Load on-hand available inventory
+    inventory = pd.read_json(inv_data_file)
+    inventory = inventory[inventory.status == ON_HAND]
+    # Load scrap orders that have been delivered
+    orders = pd.read_json(order_data_file)
+    orders = orders[orders.status == DELIVERED]
 
-    with open(inv_data_file) as inv_file:
-        inventory = json.load(inv_file)
-    with open(order_data_file) as orders_file:
-        orders = json.load(orders_file)
-
-    busheling_weight = 0.0
-    pigiron_weight = 0.0
-    shred_weight = 0.0
-    skulls_weight = 0.0
-
-    # Add available inventory
-    for i in inventory:
-        if i["status"] == ON_HAND:
-            if i["scrap_type"] == BUSHELING:
-                busheling_weight += i["weight"]
-            elif i["scrap_type"] == PIG_IRON:
-                pigiron_weight += i["weight"]
-            elif i["scrap_type"] == SHRED:
-                shred_weight += i["weight"]
-            elif i["scrap_type"] == SKULLS:
-                skulls_weight += i["weight"]
-
-    # Add delivered scrap inventory
-    for o in orders:
-        if o["status"] == DELIVERED:
-            if o["scrap_type"] == BUSHELING:
-                busheling_weight += i["weight"]
-            elif o["scrap_type"] == PIG_IRON:
-                pigiron_weight += i["weight"]
-            elif o["scrap_type"] == SHRED:
-                shred_weight += i["weight"]
-            elif o["scrap_type"] == SKULLS:
-                skulls_weight += i["weight"]
+    busheling_weight = (
+        inventory[inventory.scrap_type == BUSHELING].weight
+        + orders[orders.scrap_type == BUSHELING].weight.sum()
+    )
+    pigiron_weight = (
+        inventory[inventory.scrap_type == PIG_IRON].weight
+        + orders[orders.scrap_type == PIG_IRON].weight.sum()
+    )
+    shred_weight = (
+        inventory[inventory.scrap_type == SHRED].weight
+        + orders[orders.scrap_type == SHRED].weight.sum()
+    )
+    skulls_weight = (
+        inventory[inventory.scrap_type == SKULLS].weight
+        + orders[orders.scrap_type == SKULLS].weight.sum()
+    )
 
     return {
         BUSHELING: busheling_weight,
@@ -99,4 +78,4 @@ def get_scrap_inventory(inv_data_file, order_data_file):
 
 
 if __name__ == "__main__":
-    get_scrap_purchases(sys.argv[1])
+    get_scrap_prices(sys.argv[1])
