@@ -77,7 +77,7 @@ class ValueInUsePredictor:
         """
         scrap_orders = '../../data/1/scrap_orders.json'
 
-        scrap_cost, yield_cost, copper_cost, value_in_use = self._run_value_in_use(scrap_orders, self.commodity_inputs, 0.15)
+        scrap_cost, yield_cost, copper_cost, value_in_use, copper_estimate, yield_estimate = self.run_value_in_use(scrap_orders, self.commodity_inputs, 0.15)
         return pd.Series({'scrap_cost': scrap_cost, 'yield_cost': yield_cost, 'copper_cost': copper_cost, 'value_in_use': value_in_use})
 
 

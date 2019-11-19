@@ -39,9 +39,10 @@ def train_yield():
 
 @app.route('/api/get/value-in-use/', methods=['GET'])
 def get_value_in_use():
-    value_in_use = ValueInUsePredictor()
+    sample = {"bushling": 300, "pig_iron": 200, "municipal_shred": 350, "skulls": 200}
+    value_in_use = ValueInUsePredictor(sample)
     response = value_in_use.get_value_in_use_training()
-    return response.to_json(orient='values')
+    return response.to_json()
 
 
 @app.route('/api/recipe/optimization/start/', methods=['GET'])

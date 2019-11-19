@@ -109,8 +109,10 @@ class YieldPredictor:
 
         :return:
         """
+        import time
+        start_time = time.time()
         self._run_training(self.training_data)
-        return "Yield model training started execution..."
+        return "Yield model execution completed in " + "{0:.2f}".format(time.time() - start_time) + " seconds."
 
 
 if __name__ == '__main__':

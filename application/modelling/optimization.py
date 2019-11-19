@@ -99,6 +99,9 @@ class RecipeOptimizer:
 
         :return:
         """
+        import time
+        start_time = time.time()
+
         scrap_orders = '../../data/1/scrap_orders.json'
         schedule = '../../data/1/production_schedule.json'
         constraints = '../../data/1/constraints.json'
@@ -106,7 +109,7 @@ class RecipeOptimizer:
         final_recipes = self.optimizer(scrap_orders, schedule, constraints, scrap_inventory)
         final_recipes.to_csv('../output/final_recipes.csv', index=False)
 
-        return "Optimization result has been written down to final_recipes.csv"
+        return "Optimization result has been written down to final_recipes.csv \n in " + "{0:.2f}".format(time.time() - start_time) +" seconds."
 
 
 if __name__ == '__main__':
