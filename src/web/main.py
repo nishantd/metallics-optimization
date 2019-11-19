@@ -33,6 +33,7 @@ yield_estimator.fit(data_loader.df_previous_production)
 cu_estimator = CuEstimator()
 cu_estimator.fit(data_loader.df_previous_production)
 
+
 @app.get("/")
 def test_data():
     return {
@@ -53,6 +54,7 @@ def get_yield_data():
         }})
     return results
 
+
 @app.get('/plots/copper')
 def get_yield_data():
     results = {}
@@ -64,6 +66,15 @@ def get_yield_data():
             'y': list(grade_yield.values())
         }})
     return results
+
+
+@app.get('/plots/inventory')
+def get_inventory_data():
+    data = data_loader.scrap_inventory
+    return {
+        'values': list(data.values()),
+        'labels': list(data.keys())
+    }
 
 
 if __name__ == '__main__':

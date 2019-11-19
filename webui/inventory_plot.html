@@ -19,7 +19,7 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
-    <title>Copper content</title>
+    <title>Inventory</title>
 </head>
 <body>
 <style>
@@ -32,42 +32,27 @@
 
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">Copper amount info</h1>
-        <hr class="my-4">
+        <h1 class="display-4">Scrap inventory</h1>
         <a class="btn-link" href="index.html" role="button">Back to dashboard</a>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
-        <p class="h3">Copper amount</p>
+        <p class="h3">Scrap on hand</p>
     </div>
-    <div class="row ">
-        <p><b>Copper</b> is one of the most important impurities in the eclectic steel making
-            process.
-            A higher amount of copper can endanger the quality of the final products.
-            In addition, each steel grade has a strict limit on the amount of copper.
-        <p>This plot shows estimated amount of copper (in grams) per 1 ton on scrap material.
-            <i>Smaller value is better</i></p>
+    <div class="row">
+        <p>For the steel production, various types of raw materials are needed. The right balance
+            of raw materials in stock is the key to profitable production.</p>
+        <p>This plot shows raw materials available in stock.</p>
     </div>
 
     <div class="row">
         <form style="border: 0.2rem solid #e9ecef; padding: 2rem; min-width: 100%; margin-bottom: 2rem">
-            <div class="form-group">
-                <label>Steel grade</label>
-                <select class="browser-default custom-select" id="steel-grade-select"
-                        style="max-width: 250px;
-                margin-left: 1rem">
-                    <option selected value="ST1">ST1</option>
-                    <option value="ST2">ST2</option>
-                    <option value="ST3">ST3</option>
-                </select>
-            </div>
-
             <div id="div-plot" style="min-width: 100%;"></div>
         </form>
     </div>
 </div>
-<script src="js/cu_plot.js"></script>
+<script src="js/inventory_plot.js"></script>
 </body>
 </html>
