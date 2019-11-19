@@ -11,5 +11,6 @@ dependencies:
   - pip>19.2.0
   - scikit-learn=0.21.3
   - tqdm=4.38.0
+  - tabulate=0.8.6
   - pip:
     - asciimatics==1.11.0
