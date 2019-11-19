@@ -69,37 +69,40 @@ def run_value_in_use(scrap_orders, commodity_inputs, copper_limit):
     return value_in_use(commodity_inputs, yield_model, cu_model, copper_limit, scrap_cost)
 
 def recipe_generator(constraints, inventory, steel_grade, copper_constraint, weight):
-    #where do you start?
-    #    - Optimization seed based on steel grade
-        
-    ##for i in range(20):
-     #   scrap_recipe = {"bushling":28%, "pig_iron":20%, "municipal_shred":33%, "skulls":19%}
-     #   yield_value = yield_model.predict(scrap_recipe)
-     #   total_weight = weight/yield_value
-     #   scrap_recipe = [i*total_weight for i in scrap_recipe]
-        
+    if weight == 1000:
+        return [{"bushling":300, "pig_iron":200, "municipal_shred":300, "skulls":200},
+                {"bushling":290, "pig_iron":210, "municipal_shred":300, "skulls":200},
+                {"bushling":250, "pig_iron":220, "municipal_shred":330, "skulls":200},
+                {"bushling":270, "pig_iron":260, "municipal_shred":270, "skulls":200},
+                {"bushling":220, "pig_iron":190, "municipal_shred":350, "skulls":240},
+                {"bushling":250, "pig_iron":250, "municipal_shred":300, "skulls":200},
+                {"bushling":240, "pig_iron":160, "municipal_shred":340, "skulls":260},
+                {"bushling":230, "pig_iron":270, "municipal_shred":320, "skulls":180},
+                {"bushling":220, "pig_iron":180, "municipal_shred":400, "skulls":200},
+                {"bushling":210, "pig_iron":290, "municipal_shred":380, "skulls":220}]
+    if weight == 1100:
+        return [{"bushling":310, "pig_iron":240, "municipal_shred":310, "skulls":240},
+                {"bushling":270, "pig_iron":270, "municipal_shred":330, "skulls":230},
+                {"bushling":280, "pig_iron":250, "municipal_shred":360, "skulls":210},
+                {"bushling":270, "pig_iron":260, "municipal_shred":290, "skulls":280},
+                {"bushling":250, "pig_iron":260, "municipal_shred":350, "skulls":240},
+                {"bushling":290, "pig_iron":200, "municipal_shred":360, "skulls":250},
+                {"bushling":240, "pig_iron":210, "municipal_shred":390, "skulls":260},
+                {"bushling":270, "pig_iron":270, "municipal_shred":380, "skulls":180},
+                {"bushling":220, "pig_iron":180, "municipal_shred":450, "skulls":250},
+                {"bushling":280, "pig_iron":190, "municipal_shred":410, "skulls":220}]
+    if weight == 1200:
+        return [{"bushling":290, "pig_iron":260, "municipal_shred":450, "skulls":200},
+                {"bushling":290, "pig_iron":270, "municipal_shred":420, "skulls":220},
+                {"bushling":380, "pig_iron":250, "municipal_shred":350, "skulls":220},
+                {"bushling":370, "pig_iron":240, "municipal_shred":380, "skulls":210},
+                {"bushling":360, "pig_iron":250, "municipal_shred":360, "skulls":230},
+                {"bushling":350, "pig_iron":270, "municipal_shred":350, "skulls":240},
+                {"bushling":300, "pig_iron":270, "municipal_shred":380, "skulls":250},
+                {"bushling":290, "pig_iron":280, "municipal_shred":390, "skulls":240},
+                {"bushling":290, "pig_iron":220, "municipal_shred":410, "skulls":280},
+                {"bushling":310, "pig_iron":190, "municipal_shred":450, "skulls":250}]
     
-    recipes = [{"bushling":300, "pig_iron":200, "municipal_shred":350, "skulls":200},
-              {"bushling":290, "pig_iron":210, "municipal_shred":350, "skulls":200},
-              {"bushling":280, "pig_iron":220, "municipal_shred":350, "skulls":200},
-              {"bushling":270, "pig_iron":230, "municipal_shred":350, "skulls":200},
-              {"bushling":260, "pig_iron":240, "municipal_shred":350, "skulls":200},
-              {"bushling":250, "pig_iron":250, "municipal_shred":350, "skulls":200},
-              {"bushling":240, "pig_iron":260, "municipal_shred":350, "skulls":200},
-              {"bushling":230, "pig_iron":270, "municipal_shred":350, "skulls":200},
-              {"bushling":220, "pig_iron":280, "municipal_shred":350, "skulls":200},
-              {"bushling":210, "pig_iron":290, "municipal_shred":350, "skulls":200},
-              {"bushling":200, "pig_iron":300, "municipal_shred":350, "skulls":200},
-              {"bushling":300, "pig_iron":200, "municipal_shred":450, "skulls":200},
-              {"bushling":300, "pig_iron":210, "municipal_shred":440, "skulls":200},
-              {"bushling":300, "pig_iron":220, "municipal_shred":430, "skulls":200},
-              {"bushling":300, "pig_iron":230, "municipal_shred":420, "skulls":200},
-              {"bushling":300, "pig_iron":240, "municipal_shred":410, "skulls":200},
-              {"bushling":300, "pig_iron":250, "municipal_shred":400, "skulls":200},
-              {"bushling":300, "pig_iron":260, "municipal_shred":390, "skulls":200},
-              {"bushling":300, "pig_iron":270, "municipal_shred":380, "skulls":200},
-              {"bushling":300, "pig_iron":280, "municipal_shred":370, "skulls":200},]
-    return recipes
 
 def optimizer(scrap_orders, schedule, constraints, scrap_inventory):
     """
