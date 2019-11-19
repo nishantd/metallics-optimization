@@ -4,7 +4,7 @@ from sklearn.linear_model import LinearRegression
 import json
 
 commodities = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
-training_data = '../data/1/previous_heats_with_properties.json'
+training_data = '../../data/1/previous_heats_with_properties.json'
 
 def yield_model(training_data):
     """
@@ -93,7 +93,7 @@ def save_model(model):
     output: saved pickle file 
     """
     
-    pickle_out = open("models/yield_model.pickle","wb")
+    pickle_out = open("pickles/yield_model.pickle","wb")
     pickle.dump(model, pickle_out)
     pickle_out.close()
     

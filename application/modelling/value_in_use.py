@@ -60,16 +60,16 @@ def value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scr
 def run_value_in_use(scrap_orders, commodity_inputs, copper_limit):
     scrap_cost = calculate_scrap_cost(scrap_orders)
     
-    yield_model = '../application/models/yield_model.pickle'
+    yield_model = '../../application/pickles/yield_model.pickle'
     yield_model = pickle.load(open(yield_model, 'rb'))
 
-    cu_model = '../application/models/copper_model.pickle'
+    cu_model = '../../application/pickles/copper_model.pickle'
     cu_model = pickle.load(open(cu_model, 'rb'))
     
     return value_in_use(commodity_inputs, yield_model, cu_model, copper_limit, scrap_cost)
 
 if __name__ == '__main__':
-    scrap_orders = '../data/1/scrap_orders.json'
+    scrap_orders = '../../data/1/scrap_orders.json'
     commodity_inputs = {"bushling":300, "pig_iron":200, "municipal_shred":350, "skulls":200}
     scrap_cost, yield_cost, copper_cost, value_in_use = run_value_in_use(scrap_orders, commodity_inputs, 0.15)
     print('scrap_cost:', scrap_cost)
