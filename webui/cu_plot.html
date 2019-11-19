@@ -19,26 +19,28 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
-    <title>Yields</title>
+    <title>Copper content</title>
 </head>
 <body>
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">Yield info</h1>
+        <h1 class="display-4">Copper amount info</h1>
+        <hr class="my-4">
         <a class="btn-link" href="index.html" role="button">Back to dashboard</a>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
-        <p class="h3">Yield per scrap</p>
+        <p class="h3">Copper amount</p>
     </div>
     <div class="row ">
-        <p>The weight of the final product is always less than the total weight of the starting
-            materials. <b>Yield</b> is an important metric that shows percentage of raw material
-            that will be melted into the final product.</p>
-        <p>This plot shows estimated percentage of yield for each scrap type.
-            <i>Higher value is better</i></p>
+        <p><b>Copper</b> is one of the most important impurities in the eclectic steel making
+            process.
+            A higher amount of copper can endanger the quality of the final products.
+            In addition, each steel grade has a strict limit on the amount of copper.
+        <p>This plot shows estimated amount of copper (in grams) per 1 ton on scrap material.
+        <i>Smaller value is better</i></p>
     </div>
 
     <div class="row">
@@ -58,6 +60,6 @@
         </form>
     </div>
 </div>
-<script src="js/yield_plot.js"></script>
+<script src="js/cu_plot.js"></script>
 </body>
 </html>
