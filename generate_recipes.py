@@ -1,18 +1,39 @@
 import glob
 import os
-from asciimatics.renderers import FigletText, Fire
+
+from asciimatics.particles import PalmFirework, StarFirework, RingFirework, SerpentFirework
+from asciimatics.renderers import FigletText, Fire, SpeechBubble, Rainbow
 from asciimatics.scene import Scene
 from asciimatics.screen import Screen
-from asciimatics.effects import Print
+from asciimatics.effects import Print, Stars
 from asciimatics.exceptions import ResizeScreenError
 import argparse
 import pandas as pd
 import json
 import numpy as np
 import tqdm
+from random import randint, choice
+from asciimatics.effects import RandomNoise
+from asciimatics.renderers import FigletText, Rainbow
+from asciimatics.scene import Scene
+from asciimatics.screen import Screen
+from asciimatics.exceptions import ResizeScreenError
+import sys
 
-import matplotlib.pylab as plt
 
+def print_intro():
+    def demo(screen):
+        effects = [
+            RandomNoise(screen,
+                        signal=Rainbow(screen,
+                                       FigletText("TEAM DROP TABLES")))
+        ]
+        screen.play([Scene(effects, 0)], stop_on_resize=True, repeat=False)
+
+    try:
+        Screen.wrapper(demo)
+    except ResizeScreenError:
+        pass
 
 def flames_cpu_screen(screen):
     scenes = []
@@ -53,6 +74,56 @@ def flames_cpu_screen(screen):
     ]
     scenes.append(Scene(effects, 100))
     screen.play(scenes, stop_on_resize=True, repeat=False)
+
+def fireworks(screen):
+    scenes = []
+    effects = [
+        Stars(screen, screen.width),
+        Print(screen,
+              SpeechBubble("Press space to see it again"),
+              y=screen.height - 3,
+              start_frame=300)
+    ]
+    for _ in range(20):
+        fireworks = [
+            (PalmFirework, 25, 30),
+            (PalmFirework, 25, 30),
+            (StarFirework, 25, 35),
+            (StarFirework, 25, 35),
+            (StarFirework, 25, 35),
+            (RingFirework, 20, 30),
+            (SerpentFirework, 30, 35),
+        ]
+        firework, start, stop = choice(fireworks)
+        effects.insert(
+            1,
+            firework(screen,
+                     randint(0, screen.width),
+                     randint(screen.height // 8, screen.height * 3 // 4),
+                     randint(start, stop),
+                     start_frame=randint(0, 250)))
+
+    effects.append(Print(screen,
+                         Rainbow(screen, FigletText("CONGRATULATIONS")),
+                         screen.height // 2 - 6,
+                         speed=1,
+                         start_frame=100))
+    effects.append(Print(screen,
+                         Rainbow(screen, FigletText("TO YOUR OPTIMAL SCHEDULE")),
+                         screen.height // 2 + 1,
+                         speed=1,
+                         start_frame=100))
+    scenes.append(Scene(effects, -1))
+
+    screen.play(scenes, stop_on_resize=True, repeat=False)
+
+
+def print_fireworks():
+    while True:
+        try:
+            Screen.wrapper(fireworks)
+        except ResizeScreenError:
+            pass
 
 
 def print_flames():
@@ -126,10 +197,14 @@ def generate_schedule_random(commodities, schedule, df_constr, iterations=10000)
 
         bad = False
 
-        # generate schedule
         res_t = []
+        p = np.random.uniform(0, 1, len(commodities))
         for s in [s["weight"] for s in schedule]:
-            res_t.append(np.random.random_integers(0, s, size=len(commodities)))
+            x = np.random.binomial(s, p, size=len(commodities))
+            x = np.maximum(x, r_min)
+            x = np.minimum(x, r_max)
+            res_t.append(x)
+
         res_t = np.vstack(res_t)
 
         # make weights equal to schedule weights by fixing last commodity
@@ -185,32 +260,36 @@ if __name__ == "__main__":
     assert len(list(glob.glob(path_json))) > 0, \
         "Could not find any jsons under {args.path}, did you enter the right path?"
 
+    print_intro()
+
     # load data
     df_prod, df_chem, df_order, df_constr, df_inven = load_data(path_json)
-    print(df_prod)
-    print(df_chem)
-    print(df_order)
-    print(df_constr)
-    print(df_inven)
 
     # scrap quality estimation
-    
 
     # Optimizing of the schedule
-    commodities = [{"name": "A", "price": 10, "cu": 0.01, "inventory": 1000, "yield": 0.99},
-                   {"name": "B", "price": 20, "cu": 0.05, "inventory": 1000, "yield": 0.95}],
+    commodities = [{"name": "bushling", "price": 10, "cu": 0.01, "inventory": 50000, "yield": 0.99},
+                   {"name": "pig_iron", "price": 20, "cu": 0.01, "inventory": 50000, "yield": 0.95},
+                   {"name": "municipal_shred", "price": 20, "cu": 0.01, "inventory": 50000,
+                    "yield": 0.95},
+                   {"name": "skulls", "price": 20, "cu": 0.00, "inventory": 50000, "yield": 0.95}]
 
     schedule = df_prod[["cu_pct", "required_weight"]].rename(
         columns={"cu_pct": "cu", "required_weight": "weight"}).to_dict(orient='record')
 
     constraints = df_constr.pivot(index="scrap_type", columns="type", values="weight")
-    constraints = constraints.rename(columns={"minimum": "min", "maximum": "max"})
+    constraints.reset_index(drop=False, inplace=True)
+    constraints = constraints.rename(
+        columns={"scrap_type": "name", "minimum": "min", "maximum": "max"}
+    )
 
-    # print_flames()
+    print_flames()
     res, stats, cost, cu_predicted = \
-        generate_schedule_random(commodities, schedule, constraints, iterations=50000)
+        generate_schedule_random(commodities, schedule, constraints, iterations=5000)
 
-    print(res)
+    print_fireworks()
+
+    # todo: res in das folgende format überführen:
 
     # [
     #     {"heat_seq": 61, "heat_id": "heat-601", "steel_grade": "ST1", "predicted_tap_weight": 1000,
