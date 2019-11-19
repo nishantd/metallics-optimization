@@ -341,15 +341,15 @@ if __name__ == "__main__":
     if args.ux:
         print_fireworks()
 
-    # todo: res in das folgende format überführen:
+    # the output to write in the json file
+    print('[')
+    for i in range(len(res)):
+        prod_header = df_prod.keys()
+        print('{"'+prod_header[0]+'":'+str(df_prod[prod_header[0]][i])+' "'+prod_header[1]+\
+              '": "'+str(df_prod[prod_header[1]][i])+'", "'+prod_header[2]+'": "'+str(df_prod[prod_header[2]][i])+\
+              '", "predicted_tap_weight": '+str(df_prod[prod_header[3]][i])+', '+'"predicted_chemistry": {"cu_pct": '\
+              +str(cu_predicted[i])+'}, "suggested_recipe": {"bushling": '+str(res[i][0])+\
+              ', "pig_iron": '+str(res[i][1])+', "municipal_shred": '\
+              +str(res[i][2])+', '+'"skulls": '+str(res[i][3])+'}}')
 
-    # [
-    #     {"heat_seq": 61, "heat_id": "heat-601", "steel_grade": "ST1", "predicted_tap_weight": 1000,
-    #      "predicted_chemistry": {"cu_pct": 0.095},
-    #      "suggested_recipe": {"bushling": 300, "pig_iron": 200, "municipal_shred": 350,
-    #                           "skulls": 200}},
-    #     {"heat_seq": 62, "heat_id": "heat-602", "steel_grade": "ST1", "predicted_tap_weight": 1100,
-    #      "predicted_chemistry": {"cu_pct": 0.1},
-    #      "suggested_recipe": {"bushling": 250, "pig_iron": 200, "municipal_shred": 300,
-    #                           "skulls": 250}}
-    # ]
+    print(']')
