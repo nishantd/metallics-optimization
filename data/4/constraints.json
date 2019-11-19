@@ -1,0 +1,8 @@
+{"scrap_type_constraints_per_heat":
+ [
+   {"scrap_type":"bushlings", "type":"minimum", "weight":200},
+   {"scrap_type":"pig_iron", "type":"minimum", "weight":100},
+   {"scrap_type":"municipal_shred", "type":"minimum", "weight":250},
+   {"scrap_type":"municipal_shred", "type":"maximum", "weight":1000}
+ ]
+}

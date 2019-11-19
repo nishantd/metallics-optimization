@@ -1,0 +1,17 @@
+[
+    {"heat_seq":101, "heat_id":"heat-1001", "steel_grade":"ST1", "required_weight":1000, "chemistry":{"cu_pct":0.1}},
+    {"heat_seq":101, "heat_id":"heat-1002", "steel_grade":"ST1", "required_weight":1000, "chemistry":{"cu_pct":0.1}},
+    {"heat_seq":101, "heat_id":"heat-1003", "steel_grade":"ST1", "required_weight":1000, "chemistry":{"cu_pct":0.1}},
+    {"heat_seq":101, "heat_id":"heat-1004", "steel_grade":"ST1", "required_weight":1000, "chemistry":{"cu_pct":0.12}},
+    {"heat_seq":101, "heat_id":"heat-1005", "steel_grade":"ST1", "required_weight":1000, "chemistry":{"cu_pct":0.12}},
+    {"heat_seq":102, "heat_id":"heat-1006", "steel_grade":"ST2", "required_weight":1200, "chemistry":{"cu_pct":0.12}},
+    {"heat_seq":102, "heat_id":"heat-1007", "steel_grade":"ST2", "required_weight":1200, "chemistry":{"cu_pct":0.12}},
+    {"heat_seq":102, "heat_id":"heat-1008", "steel_grade":"ST2", "required_weight":1200, "chemistry":{"cu_pct":0.10}},
+    {"heat_seq":102, "heat_id":"heat-1009", "steel_grade":"ST2", "required_weight":1200, "chemistry":{"cu_pct":0.10}},
+    {"heat_seq":102, "heat_id":"heat-1010", "steel_grade":"ST2", "required_weight":1200, "chemistry":{"cu_pct":0.12}},
+    {"heat_seq":102, "heat_id":"heat-1011", "steel_grade":"ST2", "required_weight":1200, "chemistry":{"cu_pct":0.12}},
+    {"heat_seq":103, "heat_id":"heat-1012", "steel_grade":"ST3", "required_weight":1000, "chemistry":{"cu_pct":0.10}},
+    {"heat_seq":103, "heat_id":"heat-1013", "steel_grade":"ST3Xy", "required_weight":1000, "chemistry":{"cu_pct":0.15}},
+    {"heat_seq":103, "heat_id":"heat-1014", "steel_grade":"ST3", "required_weight":1100, "chemistry":{"cu_pct":0.15}},
+    {"heat_seq":103, "heat_id":"heat-1015", "steel_grade":"ST3", "required_weight":1100, "chemistry":{"cu_pct":0.15}}
+]
