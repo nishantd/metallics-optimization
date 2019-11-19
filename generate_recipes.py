@@ -1,15 +1,7 @@
-import glob
-import os
-
 from asciimatics.particles import PalmFirework, StarFirework, RingFirework, SerpentFirework
-from asciimatics.renderers import FigletText, Fire, SpeechBubble, Rainbow
-from asciimatics.scene import Scene
-from asciimatics.screen import Screen
+from asciimatics.renderers import Fire, SpeechBubble
 from asciimatics.effects import Print, Stars
-from asciimatics.exceptions import ResizeScreenError
 import argparse
-import pandas as pd
-import json
 import numpy as np
 import tqdm
 from random import randint, choice
@@ -18,7 +10,12 @@ from asciimatics.renderers import FigletText, Rainbow
 from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError
-import sys
+import pandas as pd
+import json
+import glob
+import os
+import numpy
+from sklearn.linear_model import Lasso
 
 
 def print_intro():
@@ -34,6 +31,7 @@ def print_intro():
         Screen.wrapper(demo)
     except ResizeScreenError:
         pass
+
 
 def flames_cpu_screen(screen):
     scenes = []
@@ -247,10 +245,64 @@ def generate_schedule_random(commodities, schedule, df_constr, iterations=10000)
     return res, stats, cost, cu_predicted
 
 
+def scrap_quality_estimation(df_chem, df_order, df_inven):
+    """ This function will estimate the quality of the scrap by estimating the portion of copper and
+    yield in the scrap component
+
+    :param df_chem: dataframe containing the chemical component of the scrap
+    :param df_order: dataframe contaning the order history with the price of the scrape
+    :param: df_inven: dataframe contaning the inventory storage of the scrape
+    :return: results_df : dataframe with Component, cu_pct, price_per_ton, yield, inv_weight
+    """
+    names_commodities = list(set(df_order["scrap_type"]) & set(df_inven["scrap_type"]))
+
+    # the portion of the total evaporated material
+    lost_portion = 1 - df_chem["yield"].values
+
+    # the portion of the evaporated material in every scrap material
+    the_component_por = df_chem[names_commodities].values
+
+    lost_share_per_component = Lasso(alpha=0.00001, fit_intercept=False, precompute=True,
+                                     positive=True)
+    lost_share_per_component.fit(the_component_por, lost_portion)
+    # portion of yield in every component
+    yield_coef = 1 - lost_share_per_component.coef_
+
+    yield_ = df_chem[names_commodities].values * yield_coef
+
+    # total copper portion in the whole scrap
+    total_copper_port = df_chem["cu_pct"].values
+    # copper portion in every component
+    copper_port = Lasso(alpha=0.00001, fit_intercept=False, precompute=True, positive=True)
+    copper_port.fit(yield_, total_copper_port)
+
+    copperport = copper_port.coef_
+
+    price_per_ton = numpy.zeros(len(names_commodities))
+    ind = 0
+
+    # calculate the av price per ton payed for the scrap in the inv
+    for component in names_commodities:
+        df = df_order[df_order['scrap_type'] == component][['weight', 'price_per_ton']]
+        p = df['price_per_ton'].values
+        w = df['weight'].values
+        price_per_ton[ind] = sum(p * w) / sum(w)
+        ind = ind + 1
+
+    inv_weight = df_inven['weight'].values
+    results_df = pd.DataFrame({'name': names_commodities,
+                               'cu': copperport,
+                               'price': price_per_ton,
+                               'yield': yield_coef,
+                               'inventory': inv_weight})
+    return results_df
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path", type=str)
+    parser.add_argument("-statics", required=False, action="store_true")
     parser.add_argument("-ux", required=False, action="store_true")
     args = parser.parse_args()
 
@@ -268,13 +320,8 @@ if __name__ == "__main__":
     df_prod, df_chem, df_order, df_constr, df_inven = load_data(path_json)
 
     # scrap quality estimation
-
-    # Optimizing of the schedule
-    commodities = [{"name": "bushling", "price": 10, "cu": 0.01, "inventory": 50000, "yield": 0.99},
-                   {"name": "pig_iron", "price": 20, "cu": 0.01, "inventory": 50000, "yield": 0.95},
-                   {"name": "municipal_shred", "price": 20, "cu": 0.01, "inventory": 50000,
-                    "yield": 0.95},
-                   {"name": "skulls", "price": 20, "cu": 0.00, "inventory": 50000, "yield": 0.95}]
+    commodities = scrap_quality_estimation(df_chem, df_order, df_inven)
+    commodities = commodities.to_dict(orient='record')
 
     schedule = df_prod[["cu_pct", "required_weight"]].rename(
         columns={"cu_pct": "cu", "required_weight": "weight"}).to_dict(orient='record')
