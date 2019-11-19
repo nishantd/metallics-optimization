@@ -6,9 +6,9 @@ import json
 commodities = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
 training_data = '../data/1/previous_heats_with_properties.json'
 
-def yield_model(training_data):
+def copper_model(training_data):
     """
-    yield_estimation: This function trains the yield estimation model
+    yield_estimation: This function trains the copper estimation model
     split into test/train
     
     input: training dataframe
@@ -16,21 +16,9 @@ def yield_model(training_data):
     """
     
     model = LinearRegression()
-    model = model.fit(training_data[[c+'_norm' for c in commodities]], training_data['yield'])
+    model = model.fit(training_data[[c+'_norm' for c in commodities]], training_data['cu_pct'])
 
     return model
-
-def calculate_yield(training):
-    """
-    calculate_yield: Function to calculate yield for a heat
-    
-    input: training dataframe
-    output: training dataframe with yield as a column
-    """
-    
-    training['yield'] = training['tap_weight']/training[commodities].sum(axis=1)
-    
-    return training
 
 def normalize_commodities(training_data):
     """
@@ -63,7 +51,7 @@ def load_training_data(training_data):
             training.loc[i, c] = training.loc[i, 'actual_recipe'][c]
             training.loc[i, c] = training.loc[i, 'actual_recipe'][c]
             training.loc[i, c] = training.loc[i, 'actual_recipe'][c]
-    training = calculate_yield(training)
+        training.loc[i, 'cu_pct'] = training.loc[i, 'chemistry']['cu_pct']
     training = normalize_commodities(training)
     
     return training
@@ -81,7 +69,7 @@ def run_training(training_data):
     """
     
     data = load_training_data(training_data)
-    model = yield_model(data)
+    model = copper_model(data)
     
     return model
 
@@ -93,7 +81,7 @@ def save_model(model):
     output: saved pickle file 
     """
     
-    pickle_out = open("models/yield_model.pickle","wb")
+    pickle_out = open("models/copper_model.pickle","wb")
     pickle.dump(model, pickle_out)
     pickle_out.close()
     
