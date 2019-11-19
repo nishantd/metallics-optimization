@@ -251,6 +251,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path", type=str)
+    parser.add_argument("-ux", required=False, action="store_true")
     args = parser.parse_args()
 
     # validate input
@@ -260,7 +261,8 @@ if __name__ == "__main__":
     assert len(list(glob.glob(path_json))) > 0, \
         "Could not find any jsons under {args.path}, did you enter the right path?"
 
-    print_intro()
+    if args.ux:
+        print_intro()
 
     # load data
     df_prod, df_chem, df_order, df_constr, df_inven = load_data(path_json)
@@ -283,11 +285,14 @@ if __name__ == "__main__":
         columns={"scrap_type": "name", "minimum": "min", "maximum": "max"}
     )
 
-    print_flames()
+    if args.ux:
+        print_flames()
+
     res, stats, cost, cu_predicted = \
         generate_schedule_random(commodities, schedule, constraints, iterations=5000)
 
-    print_fireworks()
+    if args.ux:
+        print_fireworks()
 
     # todo: res in das folgende format überführen:
 
