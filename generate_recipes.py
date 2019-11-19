@@ -73,6 +73,7 @@ def flames_cpu_screen(screen):
     scenes.append(Scene(effects, 100))
     screen.play(scenes, stop_on_resize=True, repeat=False)
 
+
 def fireworks(screen):
     scenes = []
     effects = [
@@ -166,7 +167,6 @@ def load_data(path):
     return df_prod, df_chem, df_order, df_constr, df_inven
 
 
-# todo: consider yield
 def generate_schedule_random(commodities, schedule, df_constr, iterations=10000):
     """
     generates a schedule by brute force
@@ -245,13 +245,14 @@ def generate_schedule_random(commodities, schedule, df_constr, iterations=10000)
     return res, stats, cost, cu_predicted
 
 
-def scrap_quality_estimation(df_chem, df_order, df_inven):
+def scrap_quality_estimation(df_chem, df_order, df_inven, price_agg="avg"):
     """ This function will estimate the quality of the scrap by estimating the portion of copper and
     yield in the scrap component
 
     :param df_chem: dataframe containing the chemical component of the scrap
     :param df_order: dataframe contaning the order history with the price of the scrape
     :param: df_inven: dataframe contaning the inventory storage of the scrape
+    :param: price_aggregate: price aggregation ("avg" or "last")
     :return: results_df : dataframe with Component, cu_pct, price_per_ton, yield, inv_weight
     """
     names_commodities = list(set(df_order["scrap_type"]) & set(df_inven["scrap_type"]))
@@ -265,17 +266,17 @@ def scrap_quality_estimation(df_chem, df_order, df_inven):
     lost_share_per_component = Lasso(alpha=0.00001, fit_intercept=False, precompute=True,
                                      positive=True)
     lost_share_per_component.fit(the_component_por, lost_portion)
+
     # portion of yield in every component
     yield_coef = 1 - lost_share_per_component.coef_
-
     yield_ = df_chem[names_commodities].values * yield_coef
 
     # total copper portion in the whole scrap
     total_copper_port = df_chem["cu_pct"].values
+
     # copper portion in every component
     copper_port = Lasso(alpha=0.00001, fit_intercept=False, precompute=True, positive=True)
     copper_port.fit(yield_, total_copper_port)
-
     copperport = copper_port.coef_
 
     price_per_ton = numpy.zeros(len(names_commodities))
@@ -283,10 +284,14 @@ def scrap_quality_estimation(df_chem, df_order, df_inven):
 
     # calculate the av price per ton payed for the scrap in the inv
     for component in names_commodities:
-        df = df_order[df_order['scrap_type'] == component][['weight', 'price_per_ton']]
-        p = df['price_per_ton'].values
-        w = df['weight'].values
-        price_per_ton[ind] = sum(p * w) / sum(w)
+        if price_agg == "avg":
+            df = df_order[df_order['scrap_type'] == component][['weight', 'price_per_ton']]
+            p = df['price_per_ton'].values
+            w = df['weight'].values
+            price_per_ton[ind] = sum(p * w) / sum(w)
+        elif price_agg == "last":
+            price_per_ton[ind] = df_order[df_order['scrap_type'] == component].sort_values(
+                by="order_date")["price_per_ton"].iloc[-1]
         ind = ind + 1
 
     inv_weight = df_inven['weight'].values
@@ -304,6 +309,7 @@ if __name__ == "__main__":
     parser.add_argument("path", type=str)
     parser.add_argument("-statics", required=False, action="store_true")
     parser.add_argument("-ux", required=False, action="store_true")
+    parser.add_argument("-last_price", required=False, action="store_true")
     args = parser.parse_args()
 
     # validate input
@@ -320,7 +326,8 @@ if __name__ == "__main__":
     df_prod, df_chem, df_order, df_constr, df_inven = load_data(path_json)
 
     # scrap quality estimation
-    commodities = scrap_quality_estimation(df_chem, df_order, df_inven)
+    commodities = scrap_quality_estimation(df_chem, df_order, df_inven,
+                                           price_agg="last" if args.last_price else "avg")
     commodities = commodities.to_dict(orient='record')
 
     schedule = df_prod[["cu_pct", "required_weight"]].rename(
