@@ -74,8 +74,6 @@ class ValueInUsePredictor:
         """
         initiate the copper model training the
         and store the model
-
-        :return:
         """
         scrap_orders = '../../data/1/scrap_orders.json'
         commodity_inputs = {"bushling": 300, "pig_iron": 200, "municipal_shred": 350, "skulls": 200}
