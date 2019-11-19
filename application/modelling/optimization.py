@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import pickle
+import numpy as np
 
 commodities = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
 
@@ -22,7 +23,7 @@ def calculate_scrap_cost(scrap_orders):
     scrap_cost = dict(zip(scrap_orders_grouped.scrap_type, scrap_orders_grouped.avg_price_per_ton))
     return scrap_cost
 
-ddef value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
+def value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
     """
     value_in_use: calculate the value in use for a given set of commodity inputs
     
@@ -59,10 +60,10 @@ ddef value_in_use(commodity_inputs, yield_model, copper_model, copper_target, sc
 def run_value_in_use(scrap_orders, commodity_inputs, copper_limit):
     scrap_cost = calculate_scrap_cost(scrap_orders)
     
-    yield_model = '../application/pickles/yield_model.pickle'
+    yield_model = '../pickles/yield_model.pickle'
     yield_model = pickle.load(open(yield_model, 'rb'))
 
-    cu_model = '../application/pickles/copper_model.pickle'
+    cu_model = '../pickles/copper_model.pickle'
     cu_model = pickle.load(open(cu_model, 'rb'))
     
     return value_in_use(commodity_inputs, yield_model, cu_model, copper_limit, scrap_cost)
@@ -131,7 +132,7 @@ def optimizer(scrap_orders, schedule, constraints, scrap_inventory):
         if yield_estimate < 0 or yield_estimate > 1:
             yield_estimate = np.random.uniform(0.8, 0.99, 1)
         if copper_estimate < 0 or copper_estimate > .5:
-            copper_estimate = np.random.uniform(0.01, 0.35, 1)
+            copper_estimate = np.random.uniform(0.01, copper_limit, 1)
         predicted_tap_weight = sum(rec.values())*yield_estimate
         value = r[3]
         final_recipes.append((heat_seq, heat_id, steel_grade, predicted_tap_weight[0], {'cu_pct': copper_estimate[0]}, rec))
@@ -143,10 +144,9 @@ def optimizer(scrap_orders, schedule, constraints, scrap_inventory):
 
 
 if __name__ == '__main__':
-    scrap_orders = '../data/1/scrap_orders.json'
-    schedule = '../data/1/production_schedule.json'
-    constraints = '../data/1/constraints.json'
-    scrap_inventory = '../data/1/scrap_inventory.json'
-    print("STARTING CODE")
+    scrap_orders = '../../data/1/scrap_orders.json'
+    schedule = '../../data/1/production_schedule.json'
+    constraints = '../../data/1/constraints.json'
+    scrap_inventory = '../../data/1/scrap_inventory.json'
     final_recipes = optimizer(scrap_orders, schedule, constraints, scrap_inventory)
-    print(final_recipes)
+    final_recipes.to_csv('../output/final_recipes.csv', index=False)
