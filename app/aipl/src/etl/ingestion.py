@@ -1,36 +1,83 @@
-# Load pandas dataframe from json
 
 import pandas as pd
-import json
+import sys
 
 
-def import_json_file(file_name, folder_name):
-    """
-    load json file as dataframe
-    
-    parameter: file_name, string
-    parameter: folder_name, string
-    """
-    data_path = f'../../../../data/{folder_name}/{file_name}'
-    with open(data_path, 'r') as datafile:
-        data = json.load(datafile)
-    df = pd.DataFrame(data)
-    return df
+# Scrap types
+BUSHELING = "bushling"
+PIG_IRON = "pig_iron"
+SHRED = "municipal_shred"
+SKULLS = "skulls"
+# Status of order
+DELIVERED = "delivered"
+ON_HAND = "on_hand"
 
-def dataframe(df, col_name):
-    """
-    Convert dictionaries in columns to dataframe
-    
-    parameter: df, dataframe which conraions dictionaroes in the clomun.
-    parameter: col_name, list, which contains dictionaries
-    
-    """
-    length = len(col_name)
-    for i in range (length):
-        ls = list(df[col_name[i]])
-        df_new = pd.DataFrame.from_dict(ls)
-        df.drop(columns=[col_name[i]], inplace=True)
-        df = pd.concat([df, df_new], axis=1)
-    return df
 
+def get_scrap_prices(order_data_file):
+    """Load scrap orders - we are not messing with dates currently and
+    are assuming all deliveries are unused
+
+    Parameters:
+        order_data_file: Location of scrap orders data
+    """
+    # Load scrap orders that have already been delivered
+    orders = pd.read_json(order_data_file)
+    orders = orders[orders.status == DELIVERED]
+
+    # Get average prices per scrap type from scrap orders
+    busheling_price = orders[orders.scrap_type == BUSHELING].price_per_ton.mean()
+    pigiron_price = orders[orders.scrap_type == PIG_IRON].price_per_ton.mean()
+    shred_price = orders[orders.scrap_type == SHRED].price_per_ton.mean()
+    skulls_price = orders[orders.scrap_type == SKULLS].price_per_ton.mean()
+
+    return {
+        BUSHELING: busheling_price,
+        PIG_IRON: pigiron_price,
+        SHRED: shred_price,
+        SKULLS: skulls_price,
+    }
+
+
+def get_scrap_inventory(inv_data_file, order_data_file):
+    """Load scrap inventory - we are not messing with dates currently and
+    are assuming all deliveries are unused
+
+    Parameters:
+        inv_data_file: Location of scrap inventory data
+        order_data_file: Location of scrap orders data
+    """
+    # Load on-hand available inventory
+    inventory = pd.read_json(inv_data_file)
+    inventory = inventory[inventory.status == ON_HAND]
+    # Load scrap orders that have been delivered
+    orders = pd.read_json(order_data_file)
+    orders = orders[orders.status == DELIVERED]
+
+    busheling_weight = (
+        inventory[inventory.scrap_type == BUSHELING].weight
+        + orders[orders.scrap_type == BUSHELING].weight.sum()
+    )
+    pigiron_weight = (
+        inventory[inventory.scrap_type == PIG_IRON].weight
+        + orders[orders.scrap_type == PIG_IRON].weight.sum()
+    )
+    shred_weight = (
+        inventory[inventory.scrap_type == SHRED].weight
+        + orders[orders.scrap_type == SHRED].weight.sum()
+    )
+    skulls_weight = (
+        inventory[inventory.scrap_type == SKULLS].weight
+        + orders[orders.scrap_type == SKULLS].weight.sum()
+    )
+
+    return {
+        BUSHELING: busheling_weight,
+        PIG_IRON: pigiron_weight,
+        SHRED: shred_weight,
+        SKULLS: skulls_weight,
+    }
+
+
+if __name__ == "__main__":
+    get_scrap_prices(sys.argv[1])
 

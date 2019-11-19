@@ -1,7 +1,7 @@
 # Any preprocessing on the ingested data
 
-from ingestion import import_json_file as ijf 
-from ingestion import dataframe 
+
+import json
 import pandas as pd
 from sklearn.utils import shuffle
 from statsmodels.iolib.smpickle import load_pickle
@@ -13,7 +13,39 @@ from modeling.yield_modeling import yield_build_model
 from modeling.yield_predictor import get_yileld_for_mix
 
 
+# Load pandas dataframe from json
 
+
+
+
+def import_json_file(file_name, folder_name):
+    """
+    load json file as dataframe
+    
+    parameter: file_name, string
+    parameter: folder_name, string
+    """
+    data_path = f'../../../../data/{folder_name}/{file_name}'
+    with open(data_path, 'r') as datafile:
+        data = json.load(datafile)
+    df = pd.DataFrame(data)
+    return df
+
+def dataframe(df, col_name):
+    """
+    Convert dictionaries in columns to dataframe
+    
+    parameter: df, dataframe which conraions dictionaroes in the clomun.
+    parameter: col_name, list, which contains dictionaries
+    
+    """
+    length = len(col_name)
+    for i in range (length):
+        ls = list(df[col_name[i]])
+        df_new = pd.DataFrame.from_dict(ls)
+        df.drop(columns=[col_name[i]], inplace=True)
+        df = pd.concat([df, df_new], axis=1)
+    return df
 
 
 def replace_string(df, col_name):
@@ -32,7 +64,7 @@ def preprocess_data(drop_col):
     """
     load data, drop useless columns, replace string witn numbers
     """
-    df = ijf('previous_heats_with_properties.json', 1)
+    df = import_json_file('previous_heats_with_properties.json', 1)
     df = dataframe(df, ['actual_recipe', 'chemistry'])
 
     df.drop(columns=drop_col, inplace=True)
