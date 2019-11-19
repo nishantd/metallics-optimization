@@ -74,8 +74,7 @@ class CopperPredictor:
 
         data = self._load_training_data(training_data)
         model = self._copper_model(data)
-
-        return model
+        self._save_model(model)
 
     def _save_model(self, model):
         """
@@ -97,12 +96,12 @@ class CopperPredictor:
 
         :return:
         """
-        model = self._run_training(self.training_data)
-        self._save_model(model)
+        self._run_training(self.training_data)
         return "Copper model training started execution..."
+
 
 if __name__ == '__main__':
     """ Still Need To Account For Heel"""
     cu = CopperPredictor()
     cu.invoke_copper_training()
-    print("training complete")
+    print("CopperPredictor training complete")
