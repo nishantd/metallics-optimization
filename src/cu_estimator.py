@@ -23,7 +23,7 @@ class CuEstimator:
         ]
 
     @staticmethod
-    def calc_function(x, row: pd.Series):
+    def calc_function(x, row: dict):
         return row['bushling'] * x[0] \
                + row['pig_iron'] * x[1] \
                + row['municipal_shred'] * x[2] \
@@ -43,7 +43,7 @@ class CuEstimator:
 
             self._estimators.update({steel_grade: values})
 
-    def predict(self, row: pd.Series):
+    def predict(self, row: dict):
         """
         Predicts copper amount for the input recipe.
 

@@ -45,6 +45,10 @@ class DataLoader:
         df_inventory = self._load_df(os.path.join(self.folder_path, 'scrap_inventory.json'))
         df_inventory = df_inventory[df_inventory['status'] == 'on_hand']
         df_inventory.set_index('scrap_type', inplace=True)
-        scrap_inventory = df_inventory['weight']
+        scrap_inventory = df_inventory['weight'].to_dict()
 
         return scrap_inventory
+
+    @property
+    def production_schedule(self):
+        return self._load_df(os.path.join(self.folder_path, 'production_schedule.json'))

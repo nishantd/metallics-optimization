@@ -1,0 +1,62 @@
+import argparse
+import json
+import sys
+
+from src.cu_estimator import CuEstimator
+from src.data_loader import DataLoader
+from src.recipe_optimizer import RecipeOptimizer
+
+
+def parse_args(args=None):
+    parser = argparse.ArgumentParser(description="This util helps to generate heat recipes.")
+    parser.add_argument('path', help='Path to the input data folder.')
+    return parser.parse_args(args)
+
+
+def _main(args):
+    # load input data
+    data_loader = DataLoader(args.path)
+
+    df_prod = data_loader.df_previous_production
+    df_constrains = data_loader.df_constrains
+    scrap_prices = data_loader.scrap_prices
+    scrap_inventory = data_loader.scrap_inventory
+    prod_schedule = data_loader.production_schedule
+
+    # fit cu estimator
+    estimator = CuEstimator()
+    estimator.fit(df_prod)
+
+    optimizer = RecipeOptimizer(estimator,
+                                df_constrains=df_constrains,
+                                prices=scrap_prices,
+                                target_gap=0.95)
+
+    results = []
+    for idx, row in prod_schedule.iterrows():
+        recipe = optimizer.optimize(row, scrap_inventory)
+
+        # update scrap on hand
+        for scrap_type, value in recipe.items():
+            scrap_inventory[scrap_type] = max(0, scrap_inventory[scrap_type] - value)
+
+        recipe_with_steel_grade = dict(recipe)
+        recipe_with_steel_grade.update({'steel_grade': row['steel_grade']})
+
+        results.append({
+            'heat_seq': row['heat_seq'],
+            'heat_id': row['heat_id'],
+            'steel_grade': row['steel_grade'],
+            'predicted_tap_weight': sum(recipe.values()),  # TODO Yield estimator
+            'predicted_chemistry': {
+                'cu_pct': estimator.predict(recipe_with_steel_grade)
+            },
+            'suggested_recipe': recipe
+        })
+
+    print(json.dumps(results))
+
+
+if __name__ == '__main__':
+    args = parse_args()
+    _main(args)

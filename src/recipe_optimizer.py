@@ -81,7 +81,7 @@ class RecipeOptimizer:
         return 'ub', cons_a, cons_b
 
     @staticmethod
-    def get_inventory_constrains(scrap_inventory: pd.Series):
+    def get_inventory_constrains(scrap_inventory: dict):
         """
         Returns scrap on hand constrains.
 
@@ -124,7 +124,7 @@ class RecipeOptimizer:
 
         return [parse_constrain(row) for _, row in df.iterrows()]
 
-    def optimize(self, row: pd.Series, inventory: pd.Series):
+    def optimize(self, row: pd.Series, inventory: dict):
 
         # target weights
         w = self.get_cost_function(self.prices)
@@ -152,5 +152,5 @@ class RecipeOptimizer:
         res = linprog_lb_wrapper(w, method='interior-point',
                                  A_ub=a_ub, A_lb=a_lb,
                                  b_ub=b_ub, b_lb=b_lb)
-
-        return dict(zip(self.scraps, res.x))
+        values = np.rint(res.x).tolist()
+        return dict(zip(self.scraps, values))
