@@ -4,53 +4,16 @@ import pickle
 
 
 class ValueInUsePredictor:
+
     def __init__(self):
         # model id - (every model should get a property model_id)
         self.commodities = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
         self.yield_model_path = '../../application/pickles/yield_model.pickle'
         self.cu_model_path = '../../application/pickles/copper_model.pickle'
 
-<<<<<<< HEAD
-def value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
-    """
-    value_in_use: calculate the value in use for a given set of commodity inputs
-    
-    inputs: 
-        commodity_inputs - dictionary of scrap_type:scrap weight
-        yield_model - unpickled yield model
-        copper_model - unpickled copper model
-        copper_target - production copper target
-        scrap_cost - dictionary of scrap_type:scrap cost
-    outputs:
-        scrap_cost_total - the totaled scrap cost for the commodities
-        yield_cost - the cost of lost yield
-        copper_cost - the cost of copper (NEEDS WORK)
-        value_in_use - the sum of all of these costs
-    """
-    total_inputs_weight = sum(commodity_inputs.values())
-    commodity_inputs_normed = {}
-    for c in commodities:
-        commodity_inputs_normed[c] = commodity_inputs[c]/total_inputs_weight
-    commodity_inputs_normed = pd.DataFrame(commodity_inputs_normed.values()).T
-    
-    yield_estimate = yield_model.predict(commodity_inputs_normed)
-    yield_cost = (1-yield_estimate) * total_inputs_weight * 743.40
-    
-    copper_estimate = copper_model.predict(commodity_inputs_normed)
-    print(copper_estimate)
-    copper_cost = (copper_target - copper_estimate) * 743.40
-    
-    scrap_cost_total = 0
-    for c in commodities:
-        scrap_cost_total += commodity_inputs[c] * scrap_cost[c]
-    value_in_use = yield_cost + copper_cost + scrap_cost_total
-    return scrap_cost_total, yield_cost, copper_cost, value_in_use
-=======
     def _calculate_scrap_cost(self, scrap_orders):
         """
         calculate_scrap_cost: Calculate the average cost of scrap from the orders
->>>>>>> 3bdbae4ce23e5919380f93e02de57fb8ff9f19ea
-
         inputs:
             scrap_orders - location of scrap orders json
         outputs:
@@ -124,16 +87,6 @@ def value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scr
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    scrap_orders = '../data/1/scrap_orders.json'
-    commodity_inputs = {"bushling":300, "pig_iron":200, "municipal_shred":350, "skulls":200}
-    scrap_cost, yield_cost, copper_cost, value_in_use = run_value_in_use(scrap_orders, commodity_inputs, 0.15)
-    print('scrap_cost:', scrap_cost)
-    print('yield_cost:', yield_cost)
-    print('copper_cost:', copper_cost)
-    print('value_in_use:', value_in_use)
-=======
     valueInUse = ValueInUsePredictor()
     valueInUse.get_value_in_use_training()
     print("ValueInUsePredictor values are ", valueInUse.get_value_in_use_training())
->>>>>>> 3bdbae4ce23e5919380f93e02de57fb8ff9f19ea
