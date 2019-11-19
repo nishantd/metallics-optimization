@@ -7,6 +7,10 @@ from src.yield_estimator import YieldEstimator
 
 
 class RecipeOptimizer:
+    """
+    The class performs recipes optimization.
+    """
+
     # internal scraps order
     scraps = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
 
@@ -172,8 +176,10 @@ class RecipeOptimizer:
                 a_ub.append(a)
                 b_ub.append(b)
 
+        # use scipy linprog solver
         res = linprog_lb_wrapper(w, method='interior-point',
                                  A_ub=a_ub, A_lb=a_lb,
                                  b_ub=b_ub, b_lb=b_lb)
+
         values = np.rint(res.x).tolist()
         return dict(zip(self.scraps, values))

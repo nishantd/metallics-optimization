@@ -1,6 +1,5 @@
 import argparse
 import json
-import sys
 
 from src.cu_estimator import CuEstimator
 from src.data_loader import DataLoader
@@ -11,6 +10,10 @@ from src.yield_estimator import YieldEstimator
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description="This util helps to generate heat recipes.")
     parser.add_argument('path', help='Path to the input data folder.')
+    parser.add_argument('--mass-factor', help='safety gap for the heat weight', type=float,
+                        default=1.01)
+    parser.add_argument('--cu-factor', help='safety gap for the copper amount', type=float,
+                        default=0.98)
     return parser.parse_args(args)
 
 
@@ -35,8 +38,8 @@ def _main(args):
                                 yield_estimator=yield_estimator,
                                 df_constrains=df_constrains,
                                 prices=scrap_prices,
-                                cu_target_gap=0.95,
-                                heat_weight_gap=1.05)
+                                cu_target_gap=args.cu_factor,
+                                heat_weight_gap=args.mass_factor)
 
     results = []
     for idx, row in prod_schedule.iterrows():

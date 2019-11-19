@@ -3,6 +3,9 @@ from scipy.optimize import least_squares
 
 
 class CuEstimator:
+    """
+    This class helps to estimate an amount of copper in 1kg of scrap.
+    """
 
     def __init__(self,
                  x0=(0.05, 0.001, 0.1, 0.04),
@@ -12,7 +15,7 @@ class CuEstimator:
         self._estimators = {}
 
     @staticmethod
-    def cost_function(x, df: pd.DataFrame):
+    def _loss(x, df: pd.DataFrame):
         """
         Calculates the loss value for the given records
 
@@ -28,7 +31,7 @@ class CuEstimator:
         ]
 
     @staticmethod
-    def calc_function(x, row: dict):
+    def _calc(x, row: dict):
         """
         Sums up the amount of copper for the given recipe.
 
@@ -49,7 +52,7 @@ class CuEstimator:
         self._estimators = {}
 
         for steel_grade, data in df.groupby('steel_grade'):
-            values = least_squares(lambda x: self.cost_function(x, data), self.x0,
+            values = least_squares(lambda x: self._loss(x, data), self.x0,
                                    bounds=self.bounds).x
 
             self._estimators.update({steel_grade: values})
@@ -67,7 +70,7 @@ class CuEstimator:
                              f'Use `fit` method first.')
 
         values = self._estimators[steel_grade]
-        return self.calc_function(values, row)
+        return self._calc(values, row)
 
     def get_estimated_values(self, steel_grade: str):
         """
