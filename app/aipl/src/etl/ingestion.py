@@ -33,5 +33,4 @@ def dataframe(df, col_name):
         df = pd.concat([df, df_new], axis=1)
     return df
 
-# df = import_json_file('previous_heats_with_properties.json', 1)
-# df = dataframe(df, ['actual_recipe', 'chemistry'])
+
