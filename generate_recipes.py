@@ -5,6 +5,7 @@ import sys
 from src.cu_estimator import CuEstimator
 from src.data_loader import DataLoader
 from src.recipe_optimizer import RecipeOptimizer
+from src.yield_estimator import YieldEstimator
 
 
 def parse_args(args=None):
@@ -23,14 +24,19 @@ def _main(args):
     scrap_inventory = data_loader.scrap_inventory
     prod_schedule = data_loader.production_schedule
 
-    # fit cu estimator
-    estimator = CuEstimator()
-    estimator.fit(df_prod)
+    # fit estimators
+    cu_estimator = CuEstimator()
+    cu_estimator.fit(df_prod)
 
-    optimizer = RecipeOptimizer(estimator,
+    yield_estimator = YieldEstimator()
+    yield_estimator.fit(df_prod)
+
+    optimizer = RecipeOptimizer(cu_estimator=cu_estimator,
+                                yield_estimator=yield_estimator,
                                 df_constrains=df_constrains,
                                 prices=scrap_prices,
-                                target_gap=0.95)
+                                cu_target_gap=0.95,
+                                heat_weight_gap=1.05)
 
     results = []
     for idx, row in prod_schedule.iterrows():
@@ -47,9 +53,9 @@ def _main(args):
             'heat_seq': row['heat_seq'],
             'heat_id': row['heat_id'],
             'steel_grade': row['steel_grade'],
-            'predicted_tap_weight': sum(recipe.values()),  # TODO Yield estimator
+            'predicted_tap_weight': yield_estimator.predict(recipe_with_steel_grade),
             'predicted_chemistry': {
-                'cu_pct': estimator.predict(recipe_with_steel_grade)
+                'cu_pct': cu_estimator.predict(recipe_with_steel_grade)
             },
             'suggested_recipe': recipe
         })

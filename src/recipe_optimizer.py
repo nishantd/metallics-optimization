@@ -3,6 +3,7 @@ import pandas as pd
 from src.helpers.linprog_helper import linprog_lb_wrapper
 
 from src.cu_estimator import CuEstimator
+from src.yield_estimator import YieldEstimator
 
 
 class RecipeOptimizer:
@@ -10,10 +11,12 @@ class RecipeOptimizer:
     scraps = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
 
     def __init__(self,
-                 estimator: CuEstimator,
+                 cu_estimator: CuEstimator,
+                 yield_estimator: YieldEstimator,
                  df_constrains: pd.DataFrame,
                  prices: pd.Series,
-                 target_gap=0.98) -> None:
+                 cu_target_gap=0.98,
+                 heat_weight_gap=1.02) -> None:
         """
         Creates a new recipe optimizer.
 
@@ -27,16 +30,20 @@ class RecipeOptimizer:
 
         Formulas:
          * Cu(x) = bush_mass * cu_amount[bash] + ... + skulls_mass * cu_amount[skulls]
-         * M(x) = bush_mass + ... + skulls_mass = Heat_Weight
+         * M(x) = bush_mass * yield[bash] + ... + skulls_mass * yield[skulls] >= Heat_Weight
          * C(x) = bush_mass * price[bash] + ... + skulls_mass * price[skulls]
 
-        :param estimator: Copper amount estimator
+        :param cu_estimator: Copper amount estimator
+        :param yield_estimator: Scrap Yield estimator
         :param df_constrains: data frame with additional constrains
         :param prices: average prices on scrap
-        :param target_gap: safety gap so not to exceed the allowable amount of copper.
+        :param cu_target_gap: safety gap so not to exceed the allowable amount of copper.
+        :param heat_weight_gap: safety gap for the heat weight.
         """
-        self.target_gap = target_gap
-        self.estimator = estimator
+        self.heat_weight_gap = heat_weight_gap
+        self.yield_estimator = yield_estimator
+        self.cu_target_gap = cu_target_gap
+        self.cu_estimator = cu_estimator
         self.prices = prices
         self.df_constraints = df_constrains
 
@@ -50,14 +57,23 @@ class RecipeOptimizer:
         return np.array([prices[scrap] for scrap in RecipeOptimizer.scraps])
 
     @staticmethod
-    def get_mass_constraints(expected_mass: int):
+    def get_mass_constraints(estimator: YieldEstimator, row: pd.Series, gap: float):
         """
-        Returns the heat mass constrain.
+        Returns the mass balance constrain.
 
         Formula:
-            Bushling + Pig Iron + Shred + Skulls >= Heat weight
+            M(x) = bush_mass * yield[bash] + ...
+                + skulls_mass * yield[skulls] >= requested_heat * gap.
+
+        :param estimator: Yield estimator to use.
+        :param row: input data to use.
+        :param gap: safety gap for the heat weight
         """
-        return 'lb', [1] * len(RecipeOptimizer.scraps), expected_mass
+        yield_values = estimator.get_estimated_values(row['steel_grade'])
+        cons_a = [yield_values[scrap_type] for scrap_type in RecipeOptimizer.scraps]
+        cons_b = row['required_weight'] * gap
+
+        return 'lb', cons_a, cons_b
 
     @staticmethod
     def get_cu_constrains(estimator: CuEstimator, row: pd.Series, gap: float):
@@ -125,7 +141,13 @@ class RecipeOptimizer:
         return [parse_constrain(row) for _, row in df.iterrows()]
 
     def optimize(self, row: pd.Series, inventory: dict):
+        """
+        Trying to calculate optimal recipe with the given constrains.
 
+        :param row: input data to use. Must contain requested heat weight and cu amount.
+        :param inventory: available amount of scrap
+        :return: A dictionary with suggested amount of scrap materials.
+        """
         # target weights
         w = self.get_cost_function(self.prices)
 
@@ -136,8 +158,9 @@ class RecipeOptimizer:
         b_lb = []  # right parts of >= constrains
 
         constrains = []
-        constrains.append(self.get_mass_constraints(row['required_weight']))
-        constrains.append(self.get_cu_constrains(self.estimator, row, self.target_gap))
+        constrains.append(
+            self.get_mass_constraints(self.yield_estimator, row, self.heat_weight_gap))
+        constrains.append(self.get_cu_constrains(self.cu_estimator, row, self.cu_target_gap))
         constrains.extend(self.get_additional_constrains(self.df_constraints))
         constrains.extend(self.get_inventory_constrains(inventory))
 
