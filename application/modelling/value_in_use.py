@@ -18,7 +18,7 @@ def calculate_scrap_cost(scrap_orders):
     scrap_orders = pd.DataFrame(scrap_orders)
     scrap_orders['total_cost'] = scrap_orders['price_per_ton'] * scrap_orders['weight']
     scrap_orders_grouped = scrap_orders.groupby('scrap_type').sum().reset_index()
-    scrap_orders_grouped['avg_price_per_ton'] = scrap_orders_grouped['total_cost']/scrap_orders_grouped['price_per_ton']
+    scrap_orders_grouped['avg_price_per_ton'] = scrap_orders_grouped['total_cost']/scrap_orders_grouped['weight']
     scrap_cost = dict(zip(scrap_orders_grouped.scrap_type, scrap_orders_grouped.avg_price_per_ton))
     return scrap_cost
 
