@@ -352,11 +352,11 @@ if __name__ == "__main__":
     print('[')
     for i in range(len(res)):
         prod_header = df_prod.keys()
-        print('{"'+prod_header[0]+'":'+str(df_prod[prod_header[0]][i])+' "'+prod_header[1]+\
+        print('{"'+prod_header[0]+'":'+str(df_prod[prod_header[0]][i])+', "'+prod_header[1]+\
               '": "'+str(df_prod[prod_header[1]][i])+'", "'+prod_header[2]+'": "'+str(df_prod[prod_header[2]][i])+\
               '", "predicted_tap_weight": '+str(df_prod[prod_header[3]][i])+', '+'"predicted_chemistry": {"cu_pct": '\
               +str(cu_predicted[i])+'}, "suggested_recipe": {"bushling": '+str(res[i][0])+\
               ', "pig_iron": '+str(res[i][1])+', "municipal_shred": '\
-              +str(res[i][2])+', '+'"skulls": '+str(res[i][3])+'}}')
+              +str(res[i][2])+', '+'"skulls": '+str(res[i][3])+'}},')
 
     print(']')
