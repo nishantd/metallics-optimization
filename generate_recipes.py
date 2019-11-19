@@ -16,6 +16,7 @@ import glob
 import os
 import numpy
 from sklearn.linear_model import Lasso
+import matplotlib.pylab as plt
 
 
 def print_intro():
@@ -238,10 +239,13 @@ def generate_schedule_random(commodities, schedule, df_constr, iterations=10000)
             cu_predicted = cu_predicted_t
             cost += [cost_temp]
 
-    stats = pd.Series({"iterations": iterations,
-                       "miss_chem": miss_chem, "miss_inven": miss_inven, "miss_constr": miss_constr,
-                       "valid": valid,
-                       "lowest_cost": cost[-1]})
+    if valid == 0:
+        print("WARNING: Did not even found one valid schedule by brute force....")
+
+    stats = pd.DataFrame({"iterations": iterations,
+                          "miss_chem": miss_chem, "miss_inven": miss_inven,
+                          "miss_constr": miss_constr,
+                          "valid": valid, "lowest_cost": cost[-1]}, index=[0])
     return res, stats, cost, cu_predicted
 
 
@@ -256,6 +260,7 @@ def scrap_quality_estimation(df_chem, df_order, df_inven, price_agg="avg"):
     :return: results_df : dataframe with Component, cu_pct, price_per_ton, yield, inv_weight
     """
     names_commodities = list(set(df_order["scrap_type"]) & set(df_inven["scrap_type"]))
+    names_commodities.sort()
 
     # the portion of the total evaporated material
     lost_portion = 1 - df_chem["yield"].values
@@ -264,7 +269,7 @@ def scrap_quality_estimation(df_chem, df_order, df_inven, price_agg="avg"):
     the_component_por = df_chem[names_commodities].values
 
     lost_share_per_component = Lasso(alpha=0.00001, fit_intercept=False, precompute=True,
-                                     positive=True)
+                                     positive=True, max_iter=10000)
     lost_share_per_component.fit(the_component_por, lost_portion)
 
     # portion of yield in every component
@@ -275,7 +280,8 @@ def scrap_quality_estimation(df_chem, df_order, df_inven, price_agg="avg"):
     total_copper_port = df_chem["cu_pct"].values
 
     # copper portion in every component
-    copper_port = Lasso(alpha=0.00001, fit_intercept=False, precompute=True, positive=True)
+    copper_port = Lasso(alpha=0.00001, fit_intercept=False, precompute=True, positive=True,
+                        max_iter=10000)
     copper_port.fit(yield_, total_copper_port)
     copperport = copper_port.coef_
 
@@ -305,11 +311,17 @@ def scrap_quality_estimation(df_chem, df_order, df_inven, price_agg="avg"):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(conflict_handler='resolve')
     parser.add_argument("path", type=str)
-    parser.add_argument("-statics", required=False, action="store_true")
-    parser.add_argument("-ux", required=False, action="store_true")
-    parser.add_argument("-last_price", required=False, action="store_true")
+    parser.add_argument("--ux", required=False, action="store_true",
+                        help="next level user interface")
+    parser.add_argument("--last_price", required=False, action="store_true",
+                        help="use last price instead of average price")
+    parser.add_argument('-v', '--verbose', action="store_true")
+    parser.add_argument("--verbose", required=False, action="store_true",
+                        help="print more information!")
+    parser.add_argument("--plot", required=False, action="store_true",
+                        help="plot the costs")
     args = parser.parse_args()
 
     # validate input
@@ -326,9 +338,14 @@ if __name__ == "__main__":
     df_prod, df_chem, df_order, df_constr, df_inven = load_data(path_json)
 
     # scrap quality estimation
-    commodities = scrap_quality_estimation(df_chem, df_order, df_inven,
-                                           price_agg="last" if args.last_price else "avg")
-    commodities = commodities.to_dict(orient='record')
+    df_com = scrap_quality_estimation(df_chem, df_order, df_inven,
+                                      price_agg="last" if args.last_price else "avg")
+    if args.verbose:
+        print("#" * 20 + " Scrap quality estimator" + "#" * 40)
+        print(df_com)
+        print("#" * 84)
+
+    commodities = df_com.to_dict(orient='record')
 
     schedule = df_prod[["cu_pct", "required_weight"]].rename(
         columns={"cu_pct": "cu", "required_weight": "weight"}).to_dict(orient='record')
@@ -343,7 +360,20 @@ if __name__ == "__main__":
         print_flames()
 
     res, stats, cost, cu_predicted = \
-        generate_schedule_random(commodities, schedule, constraints, iterations=5000)
+        generate_schedule_random(commodities, schedule, constraints, iterations=50000)
+
+    if args.plot:
+        plt.plot([c/res.sum().sum() for c in cost])
+        plt.title("Cost for ton of that schedule over brute force iteration")
+        plt.xlabel("Brute force iteration")
+        plt.ylabel("Average cost of a ton for the optimized schedule")
+        plt.gca().set_xlim(left=0)
+        plt.show()
+
+    if args.verbose:
+        print("#" * 20 + " Schedule optimization stats" + "#" * 37)
+        print(stats)
+        print("#" * 84)
 
     if args.ux:
         print_fireworks()
