@@ -65,7 +65,8 @@ class RecipeOptimizer:
 
             recipes = self.recipe_generator(constraints, inventory, steel_grade, copper_limit, weight)
             all_recipes = []
-            valueInUse = ValueInUsePredictor()
+            sample = {"bushling": 300, "pig_iron": 200, "municipal_shred": 350, "skulls": 200}
+            valueInUse = ValueInUsePredictor(sample)
             for recipe in recipes:
                 scrap_cost, yield_cost, copper_cost, value_in_use, copper_estimate, yield_estimate = valueInUse.run_value_in_use(
                     scrap_orders, recipe, copper_limit)

@@ -3,6 +3,7 @@ import numpy as np
 import pickle as p
 
 from application.modelling.copper_training import CopperPredictor
+from application.modelling.optimization import RecipeOptimizer
 from application.modelling.value_in_use import ValueInUsePredictor
 from application.modelling.yield_training import YieldPredictor
 
@@ -41,6 +42,13 @@ def get_value_in_use():
     value_in_use = ValueInUsePredictor()
     response = value_in_use.get_value_in_use_training()
     return response.to_json(orient='values')
+
+
+@app.route('/api/recipe/optimization/start/', methods=['GET'])
+def startRecipeOptimization():
+    recOpt = RecipeOptimizer()
+    response = recOpt.invoke_optimization()
+    return jsonify(response)
 
 
 if __name__ == '__main__':
