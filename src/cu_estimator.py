@@ -29,7 +29,12 @@ class CuEstimator:
                + row['municipal_shred'] * x[2] \
                + row['skulls'] * x[3]
 
-    def fit(self, df):
+    def fit(self, df: pd.DataFrame):
+        """
+        Fits estimator on th `df` data frame.
+
+        :param df: The data frame with previous heats and their props.
+        """
         self._estimators = {}
 
         for steel_grade, data in df.groupby('steel_grade'):
@@ -39,6 +44,12 @@ class CuEstimator:
             self._estimators.update({steel_grade: values})
 
     def predict(self, row: pd.Series):
+        """
+        Predicts copper amount for the input recipe.
+
+        :param row: Series with the `steel_grade` and recipe of the heat to predict.
+        :return: estimated amount of copper for the recipe.
+        """
         steel_grade = row['steel_grade']
         if steel_grade not in self._estimators:
             raise ValueError(f'Steel grade {steel_grade} has no estimator yet.'
@@ -47,7 +58,12 @@ class CuEstimator:
         values = self._estimators[steel_grade]
         return self.calc_function(values, row)
 
-    def get_estimated_cu_values(self, steel_grade: str):
+    def get_estimated_values(self, steel_grade: str):
+        """
+        Returns estimated amount of copper per 1 kg of raw material.
+        :param steel_grade: the requested steel grade.
+        :return: dictionary with results.
+        """
         if steel_grade not in self._estimators:
             raise ValueError(f'Steel grade {steel_grade} has no estimator yet.'
                              f'Use `fit` method first.')
