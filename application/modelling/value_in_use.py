@@ -22,7 +22,7 @@ def calculate_scrap_cost(scrap_orders):
     scrap_cost = dict(zip(scrap_orders_grouped.scrap_type, scrap_orders_grouped.avg_price_per_ton))
     return scrap_cost
 
-def value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
+ddef value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
     """
     value_in_use: calculate the value in use for a given set of commodity inputs
     
@@ -48,22 +48,21 @@ def value_in_use(commodity_inputs, yield_model, copper_model, copper_target, scr
     yield_cost = (1-yield_estimate) * total_inputs_weight * 743.40
     
     copper_estimate = copper_model.predict(commodity_inputs_normed)
-    print(copper_estimate)
     copper_cost = (copper_target - copper_estimate) * 743.40
     
     scrap_cost_total = 0
     for c in commodities:
         scrap_cost_total += commodity_inputs[c] * scrap_cost[c]
     value_in_use = yield_cost + copper_cost + scrap_cost_total
-    return scrap_cost_total, yield_cost, copper_cost, value_in_use
+    return scrap_cost_total, yield_cost, copper_cost, value_in_use, copper_estimate, yield_estimate
 
 def run_value_in_use(scrap_orders, commodity_inputs, copper_limit):
     scrap_cost = calculate_scrap_cost(scrap_orders)
     
-    yield_model = '../../application/pickles/yield_model.pickle'
+    yield_model = '../application/pickles/yield_model.pickle'
     yield_model = pickle.load(open(yield_model, 'rb'))
 
-    cu_model = '../../application/pickles/copper_model.pickle'
+    cu_model = '../application/pickles/copper_model.pickle'
     cu_model = pickle.load(open(cu_model, 'rb'))
     
     return value_in_use(commodity_inputs, yield_model, cu_model, copper_limit, scrap_cost)
