@@ -1,0 +1,17 @@
+[
+    {"heat_seq":51, "heat_id":"heat-501", "steel_grade":"ST1", "required_weight":1000, "tap_weight":970, "chemistry":{"cu_pct":0.095}, "actual_recipe":{"bushling":300, "pig_iron":200, "municipal_shred":350, "skulls":200}},
+    {"heat_seq":51, "heat_id":"heat-502", "steel_grade":"ST1", "required_weight":1000, "tap_weight":920, "chemistry":{"cu_pct":0.104}, "actual_recipe":{"bushling":300, "pig_iron":200, "municipal_shred":300, "skulls":250}},
+    {"heat_seq":51, "heat_id":"heat-503", "steel_grade":"ST1", "required_weight":1000, "tap_weight":940, "chemistry":{"cu_pct":0.105}, "actual_recipe":{"bushling":200, "pig_iron":200, "municipal_shred":300, "skulls":250}},
+    {"heat_seq":51, "heat_id":"heat-504", "steel_grade":"ST1", "required_weight":1000, "tap_weight":935, "chemistry":{"cu_pct":0.089}, "actual_recipe":{"bushling":200, "pig_iron":300, "municipal_shred":350, "skulls":200}},
+    {"heat_seq":51, "heat_id":"heat-505", "steel_grade":"ST1", "required_weight":1000, "tap_weight":945, "chemistry":{"cu_pct":0.093}, "actual_recipe":{"bushling":200, "pig_iron":300, "municipal_shred":350, "skulls":200}},
+    {"heat_seq":52, "heat_id":"heat-506", "steel_grade":"ST2", "required_weight":1200, "tap_weight":910, "chemistry":{"cu_pct":0.102}, "actual_recipe":{"bushling":275, "pig_iron":200, "municipal_shred":350, "skulls":225}},
+    {"heat_seq":52, "heat_id":"heat-507", "steel_grade":"ST2", "required_weight":1200, "tap_weight":930, "chemistry":{"cu_pct":0.114}, "actual_recipe":{"bushling":275, "pig_iron":200, "municipal_shred":350, "skulls":225}},
+    {"heat_seq":52, "heat_id":"heat-508", "steel_grade":"ST2", "required_weight":1200, "tap_weight":965, "chemistry":{"cu_pct":0.118}, "actual_recipe":{"bushling":250, "pig_iron":200, "municipal_shred":350, "skulls":250}},
+    {"heat_seq":52, "heat_id":"heat-509", "steel_grade":"ST2", "required_weight":1200, "tap_weight":940, "chemistry":{"cu_pct":0.124}, "actual_recipe":{"bushling":250, "pig_iron":200, "municipal_shred":350, "skulls":250}},
+    {"heat_seq":52, "heat_id":"heat-510", "steel_grade":"ST2", "required_weight":1200, "tap_weight":975, "chemistry":{"cu_pct":0.121}, "actual_recipe":{"bushling":250, "pig_iron":200, "municipal_shred":350, "skulls":250}},
+    {"heat_seq":52, "heat_id":"heat-511", "steel_grade":"ST2", "required_weight":1200, "tap_weight":955, "chemistry":{"cu_pct":0.115}, "actual_recipe":{"bushling":250, "pig_iron":200, "municipal_shred":350, "skulls":250}},
+    {"heat_seq":53, "heat_id":"heat-512", "steel_grade":"ST3", "required_weight":1100, "tap_weight":945, "chemistry":{"cu_pct":0.127}, "actual_recipe":{"bushling":200, "pig_iron":200, "municipal_shred":400, "skulls":250}},
+    {"heat_seq":53, "heat_id":"heat-513", "steel_grade":"ST3", "required_weight":1100, "tap_weight":955, "chemistry":{"cu_pct":0.133}, "actual_recipe":{"bushling":200, "pig_iron":200, "municipal_shred":400, "skulls":250}},
+    {"heat_seq":53, "heat_id":"heat-514", "steel_grade":"ST3", "required_weight":1100, "tap_weight":940, "chemistry":{"cu_pct":0.14}, "actual_recipe":{"bushling":200, "pig_iron":200, "municipal_shred":400, "skulls":250}},
+    {"heat_seq":53, "heat_id":"heat-515", "steel_grade":"ST3", "required_weight":1100, "tap_weight":925, "chemistry":{"cu_pct":0.138}, "actual_recipe":{"bushling":200, "pig_iron":200, "municipal_shred":400, "skulls":250}}
+]
