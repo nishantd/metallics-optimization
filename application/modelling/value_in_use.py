@@ -5,11 +5,12 @@ import pickle
 
 class ValueInUsePredictor:
 
-    def __init__(self):
+    def __init__(self, commodity_inputs):
         # model id - (every model should get a property model_id)
         self.commodities = ['bushling', 'pig_iron', 'municipal_shred', 'skulls']
         self.yield_model_path = '../../application/pickles/yield_model.pickle'
         self.cu_model_path = '../../application/pickles/copper_model.pickle'
+        self.commodity_inputs = commodity_inputs
 
     def _calculate_scrap_cost(self, scrap_orders):
         """
@@ -54,7 +55,6 @@ class ValueInUsePredictor:
         yield_cost = (1-yield_estimate) * total_inputs_weight * 743.40
 
         copper_estimate = copper_model.predict(commodity_inputs_normed)
-        print(copper_estimate)
         copper_cost = (copper_target - copper_estimate) * 743.40
 
         scrap_cost_total = 0
@@ -76,17 +76,13 @@ class ValueInUsePredictor:
         and store the model
         """
         scrap_orders = '../../data/1/scrap_orders.json'
-        commodity_inputs = {"bushling": 300, "pig_iron": 200, "municipal_shred": 350, "skulls": 200}
-        scrap_cost, yield_cost, copper_cost, value_in_use = self._run_value_in_use(scrap_orders, commodity_inputs, 0.15)
-        print('scrap_cost:', scrap_cost)
-        print('yield_cost:', yield_cost)
-        print('copper_cost:', copper_cost)
-        print('value_in_use:', value_in_use)
-
+        
+        scrap_cost, yield_cost, copper_cost, value_in_use = self._run_value_in_use(scrap_orders, self.commodity_inputs, 0.15)
         return pd.Series({'scrap_cost': scrap_cost, 'yield_cost': yield_cost, 'copper_cost': copper_cost, 'value_in_use': value_in_use})
 
 
 if __name__ == '__main__':
-    valueInUse = ValueInUsePredictor()
+    sample = {"bushling": 300, "pig_iron": 200, "municipal_shred": 350, "skulls": 200}
+    valueInUse = ValueInUsePredictor(sample)
     valueInUse.get_value_in_use_training()
     print("ValueInUsePredictor values are ", valueInUse.get_value_in_use_training())
