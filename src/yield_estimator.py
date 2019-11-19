@@ -2,11 +2,11 @@ import pandas as pd
 from scipy.optimize import least_squares
 
 
-class CuEstimator:
+class YieldEstimator:
 
     def __init__(self,
-                 x0=(0.05, 0.001, 0.1, 0.04),
-                 bounds=([0, 0, 0, 0], [100, 100, 100, 100])) -> None:
+                 x0=(0.9, 0.99, 0.95, 0.89),
+                 bounds=([0, 0, 0, 0], [1, 1, 1, 1])) -> None:
         self.x0 = x0
         self.bounds = bounds
         self._estimators = {}
@@ -16,14 +16,14 @@ class CuEstimator:
         """
         Calculates the loss value for the given records
 
-        Loss is the total amount of the copper - allowable amount.
+        Loss is the expected heat weight - tap weight.
         """
         return [
             row['bushling'] * x[0]
             + row['pig_iron'] * x[1]
             + row['municipal_shred'] * x[2]
             + row['skulls'] * x[3]
-            - row['cu_pct']
+            - row['tap_weight']
             for _, row in df.iterrows()
         ]
 
@@ -56,10 +56,10 @@ class CuEstimator:
 
     def predict(self, row: dict):
         """
-        Predicts copper amount for the input recipe.
+        Predicts yield the input scrap types.
 
         :param row: Series with the `steel_grade` and recipe of the heat to predict.
-        :return: estimated amount of copper for the recipe.
+        :return: estimated yield per scrap type for the recipe.
         """
         steel_grade = row['steel_grade']
         if steel_grade not in self._estimators:
@@ -71,7 +71,7 @@ class CuEstimator:
 
     def get_estimated_values(self, steel_grade: str):
         """
-        Returns estimated amount of copper per 1 kg of raw material.
+        Returns estimated yield for raw material.
         :param steel_grade: the requested steel grade.
         :return: dictionary with results.
         """
