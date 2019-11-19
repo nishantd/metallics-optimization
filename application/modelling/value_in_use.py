@@ -11,7 +11,7 @@ class ValueInUsePredictor:
         self.yield_model_path = '../../application/pickles/yield_model.pickle'
         self.cu_model_path = '../../application/pickles/copper_model.pickle'
 
-    def _calculate_scrap_cost(self, scrap_orders):
+    def calculate_scrap_cost(self, scrap_orders):
         """
         calculate_scrap_cost: Calculate the average cost of scrap from the orders
         inputs:
@@ -28,7 +28,7 @@ class ValueInUsePredictor:
         scrap_cost = dict(zip(scrap_orders_grouped.scrap_type, scrap_orders_grouped.avg_price_per_ton))
         return scrap_cost
 
-    def _value_in_use(self, commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
+    def value_in_use(self, commodity_inputs, yield_model, copper_model, copper_target, scrap_cost):
         """
         value_in_use: calculate the value in use for a given set of commodity inputs
 
@@ -63,12 +63,12 @@ class ValueInUsePredictor:
         value_in_use = yield_cost + copper_cost + scrap_cost_total
         return scrap_cost_total, yield_cost, copper_cost, value_in_use
 
-    def _run_value_in_use(self, scrap_orders, commodity_inputs, copper_limit):
-        scrap_cost = self._calculate_scrap_cost(scrap_orders)
+    def run_value_in_use(self, scrap_orders, commodity_inputs, copper_limit):
+        scrap_cost = self.calculate_scrap_cost(scrap_orders)
         yield_model = pickle.load(open(self.yield_model_path, 'rb'))
         cu_model = pickle.load(open(self.cu_model_path, 'rb'))
 
-        return self._value_in_use(commodity_inputs, yield_model, cu_model, copper_limit, scrap_cost)
+        return self.value_in_use(commodity_inputs, yield_model, cu_model, copper_limit, scrap_cost)
 
     def get_value_in_use_training(self):
         """
@@ -77,7 +77,7 @@ class ValueInUsePredictor:
         """
         scrap_orders = '../../data/1/scrap_orders.json'
         commodity_inputs = {"bushling": 300, "pig_iron": 200, "municipal_shred": 350, "skulls": 200}
-        scrap_cost, yield_cost, copper_cost, value_in_use = self._run_value_in_use(scrap_orders, commodity_inputs, 0.15)
+        scrap_cost, yield_cost, copper_cost, value_in_use = self.run_value_in_use(scrap_orders, commodity_inputs, 0.15)
         print('scrap_cost:', scrap_cost)
         print('yield_cost:', yield_cost)
         print('copper_cost:', copper_cost)
