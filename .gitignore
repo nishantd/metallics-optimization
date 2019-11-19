@@ -3,6 +3,9 @@
 
 .idea/
 venv/
+*.egg-info/
+*.ipynb_checkpoints
+**/__pycache__/
 
 # User-specific stuff
 .idea/**/workspace.xml
