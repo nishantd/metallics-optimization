@@ -109,7 +109,12 @@ def fireworks(screen):
                          speed=1,
                          start_frame=100))
     effects.append(Print(screen,
-                         Rainbow(screen, FigletText("TO YOUR OPTIMAL SCHEDULE")),
+                         Rainbow(screen, FigletText("TO YOUR")),
+                         screen.height // 2 + 1,
+                         speed=1,
+                         start_frame=100))
+    effects.append(Print(screen,
+                         Rainbow(screen, FigletText("OPTIMAL SCHEDULE")),
                          screen.height // 2 + 1,
                          speed=1,
                          start_frame=100))
@@ -168,7 +173,7 @@ def load_data(path):
     return df_prod, df_chem, df_order, df_constr, df_inven
 
 
-def generate_schedule_random(commodities, schedule, df_constr, iterations=10000):
+def generate_schedule_random(commodities, schedule, df_constr, iterations, verbose=True):
     """
     generates a schedule by brute force
     """
@@ -191,20 +196,31 @@ def generate_schedule_random(commodities, schedule, df_constr, iterations=10000)
     res = None
     miss_chem, miss_inven, miss_constr = 0, 0, 0
     valid = 0
+    random_p = True
+    random_matrix = True
+    res_t = None
 
-    for _ in tqdm.tqdm(range(iterations)):
+    for _ in tqdm.tqdm(range(iterations), disable=not verbose):
 
         bad = False
 
-        res_t = []
-        p = np.random.uniform(0, 1, len(commodities))
-        for s in [s["weight"] for s in schedule]:
-            x = np.random.binomial(s, p, size=len(commodities))
-            x = np.maximum(x, r_min)
-            x = np.minimum(x, r_max)
-            res_t.append(x)
+        if random_p:
+            p = np.random.uniform(0, 1, len(commodities))
 
-        res_t = np.vstack(res_t)
+        if random_matrix:
+            res_t = []
+
+            for s in [s["weight"] for s in schedule]:
+                x = np.random.binomial(s, p, size=len(commodities))
+                x = np.maximum(x, r_min)
+                x = np.minimum(x, r_max)
+                res_t.append(x)
+
+            res_t = np.vstack(res_t)
+        else:
+            res_t = res_t + (np.random.binomial(2, 0.5, size=res_t.shape) - 1.0)
+            res_t = np.maximum(res_t, r_min)
+            res_t = np.minimum(res_t, r_max)
 
         # make weights equal to schedule weights by fixing last commodity
         res_t[:, -1] = s_weight - res_t[:, :-1].sum(axis=1)
@@ -228,10 +244,14 @@ def generate_schedule_random(commodities, schedule, df_constr, iterations=10000)
 
         if bad:
             cost += [cost[-1]]
+            random_p = True
+            random_matrix = True
             continue
 
         valid += 1
         cost_temp = np.sum(used * c_price)
+        random_p = choice([False] * 19 + [True])
+        random_matrix = choice([False] * 19 + [True])
 
         # check if costs are lower than best so far
         if cost_temp < cost[-1]:
@@ -317,7 +337,7 @@ if __name__ == "__main__":
                         help="next level user interface")
     parser.add_argument("--last_price", required=False, action="store_true",
                         help="use last price instead of average price")
-    parser.add_argument('-v', '--verbose', action="store_true")
+    parser.add_argument('-v', '--verbose', action="store_true", default=False)
     parser.add_argument("--verbose", required=False, action="store_true",
                         help="print more information!")
     parser.add_argument("--plot", required=False, action="store_true",
@@ -332,6 +352,7 @@ if __name__ == "__main__":
         "Could not find any jsons under {args.path}, did you enter the right path?"
 
     if args.ux:
+        args.verbose = True
         print_intro()
 
     # load data
@@ -360,7 +381,8 @@ if __name__ == "__main__":
         print_flames()
 
     res, stats, cost, cu_predicted = \
-        generate_schedule_random(commodities, schedule, constraints, iterations=50000)
+        generate_schedule_random(commodities, schedule, constraints, iterations=200000,
+                                 verbose=args.verbose)
 
     if args.plot:
         plt.plot([c/res.sum().sum() for c in cost])
@@ -378,15 +400,16 @@ if __name__ == "__main__":
     if args.ux:
         print_fireworks()
 
-    # the output to write in the json file
-    print('[')
-    for i in range(len(res)):
-        prod_header = df_prod.keys()
-        print('{"'+prod_header[0]+'":'+str(df_prod[prod_header[0]][i])+', "'+prod_header[1]+\
-              '": "'+str(df_prod[prod_header[1]][i])+'", "'+prod_header[2]+'": "'+str(df_prod[prod_header[2]][i])+\
-              '", "predicted_tap_weight": '+str(df_prod[prod_header[3]][i])+', '+'"predicted_chemistry": {"cu_pct": '\
-              +str(cu_predicted[i])+'}, "suggested_recipe": {"bushling": '+str(res[i][0])+\
-              ', "pig_iron": '+str(res[i][1])+', "municipal_shred": '\
-              +str(res[i][2])+', '+'"skulls": '+str(res[i][3])+'}},')
+    if res is not None:
+        # the output to write in the json file
+        print('[')
+        for i in range(len(res)):
+            prod_header = df_prod.keys()
+            print('{"'+prod_header[0]+'":'+str(df_prod[prod_header[0]][i])+', "'+prod_header[1]+\
+                  '": "'+str(df_prod[prod_header[1]][i])+'", "'+prod_header[2]+'": "'+str(df_prod[prod_header[2]][i])+\
+                  '", "predicted_tap_weight": '+str(df_prod[prod_header[3]][i])+', '+'"predicted_chemistry": {"cu_pct": '\
+                  +str(cu_predicted[i])+'}, "suggested_recipe": {"bushling": '+str(res[i][0])+\
+                  ', "pig_iron": '+str(res[i][1])+', "municipal_shred": '\
+                  +str(res[i][2])+', '+'"skulls": '+str(res[i][3])+'}},')
 
-    print(']')
+        print(']')
