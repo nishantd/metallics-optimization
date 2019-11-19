@@ -3,43 +3,39 @@ $(document).ready(() => {
     $.ajax({
         headers: {"Accept": "application/json"},
         type: 'GET',
-        url: 'http://127.0.0.1:8001/plots/copper',
+        url: 'http://127.0.0.1:8001/plots/prices',
         crossDomain: true,
         success: (res) => {
             console.log(res);
-            const copper_data = res;
+            const prices = res;
 
-            $('#steel-grade-select').change(() => {
-                update_plot(copper_data);
-            });
-
-            update_plot(copper_data);
+            update_plot(prices);
         }
     });
 
-    function update_plot(yield_data) {
-        let grade = $('#steel-grade-select').val();
-        let grade_copper = yield_data[grade];
+    function update_plot(prices) {
 
-        let x = grade_copper['x'];
-        let y = grade_copper['y'].map(val => val * 1000 * 1000);
+        let x = Object.keys(prices);
+        let y = Object.values(prices);
+
+        y = y.map(val => val * 1000);
 
         let data = [{
             type: 'bar',
             x: y,
             y: x,
             orientation: 'h',
-            text: y.map(x => x.toFixed(4)).map(String),
+            text: y.map((x) => x.toFixed(2)).map(x => '$' + String(x)),
             textposition: 'auto',
             hoverinfo: 'none',
-            marker: {color: "#ff7f0e"},
+            marker: {color: "rgb(50,171, 96)"},
         }];
 
         let layout = {
 
             xaxis: {
                 title: {
-                    text: 'Expected copper amount (g per 1 ton)',
+                    text: 'Average scrap price ($ per ton)',
                     font: {
                         size: 14,
                         color: '#7f7f7f'
@@ -52,5 +48,4 @@ $(document).ready(() => {
 
         Plotly.newPlot('div-plot', data, layout);
     }
-
 });

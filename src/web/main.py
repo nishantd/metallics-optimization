@@ -77,5 +77,11 @@ def get_inventory_data():
     }
 
 
+@app.get('/plots/prices')
+def get_prices_data():
+    data = data_loader.scrap_prices
+    return data
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8001)
