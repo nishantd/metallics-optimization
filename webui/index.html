@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+<body>
+
+<style>
+    .h3 {
+        border-bottom: 0.2rem solid #e9ecef;
+        margin-bottom: 1rem;
+        min-width: 100%;
+    }
+</style>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Online Dashboard</h1>
+        <p class="lead">All plots and online tools in one place.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <p class="h3">Plots</p>
+    </div>
+    <div class="row">
+
+        <div class="card" style="width: 18rem;">
+            <img src="images/yield.png" class="card-img-top" style="margin-top: 1rem">
+            <div class="card-body">
+                <h5 class="card-title">Yield</h5>
+                <p class="card-text">Display estimated yield percent for each steel grade</p>
+                <a href="yield_plot.html" class="card-link">Show</a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script src="js/plot.js"></script>
+</body>
+</html>
