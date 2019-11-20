@@ -1,0 +1,16 @@
+name: hack
+channels:
+  - default
+  - conda-forge
+dependencies:
+  - python>3.6.0
+  - pandas=0.25.0
+  - jupyter=1.0.0
+  - matplotlib=3.1.0
+  - seaborn=0.9.0
+  - pip>19.2.0
+  - scikit-learn=0.21.3
+  - tqdm=4.38.0
+  - tabulate=0.8.6
+  - pip:
+    - asciimatics==1.11.0

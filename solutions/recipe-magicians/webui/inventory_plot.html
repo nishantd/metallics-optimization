@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            crossorigin="anonymous"></script>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>Inventory</title>
+</head>
+<body>
+<style>
+    .h3 {
+        border-bottom: 0.2rem solid #e9ecef;
+        margin-bottom: 1rem;
+        min-width: 100%;
+    }
+</style>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Scrap inventory</h1>
+        <a class="btn-link" href="index.html" role="button">Back to dashboard</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <p class="h3">Scrap on hand</p>
+    </div>
+    <div class="row">
+        <p>For the steel production, various types of raw materials are needed. The right balance
+            of raw materials in stock is the key to profitable production.</p>
+        <p>This plot shows raw materials available in stock.</p>
+    </div>
+
+    <div class="row">
+        <form style="border: 0.2rem solid #e9ecef; padding: 2rem; min-width: 100%; margin-bottom: 2rem">
+            <div id="div-plot" style="min-width: 100%;"></div>
+        </form>
+    </div>
+</div>
+<script src="js/inventory_plot.js"></script>
+</body>
+</html>
