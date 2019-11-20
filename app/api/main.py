@@ -22,6 +22,7 @@ async def read_item():
 def update_item(id: str = None, copper_percentage: float = 0):
     return {"id": id, "copper_percentage": copper_percentage}
 
+#
 # if __name__ == '__main__':
 # Starts a new server on localhost:8000.
 # Later we can make a config file for this.
