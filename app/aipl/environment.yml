@@ -8,4 +8,8 @@ dependencies:
   - black
   - cvxopt
   - flake8
-  - pandas
+  - pandas=0.25.0
+  - jupyter
+  - fastapi=0.42.0
+  - uvicorn=0.9.1
+
