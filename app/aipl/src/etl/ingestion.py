@@ -53,19 +53,19 @@ def get_scrap_inventory(inv_data_file, order_data_file):
     orders = orders[orders.status == DELIVERED]
 
     busheling_weight = (
-        inventory[inventory.scrap_type == BUSHELING].weight
+        inventory[inventory.scrap_type == BUSHELING].weight.sum()
         + orders[orders.scrap_type == BUSHELING].weight.sum()
     )
     pigiron_weight = (
-        inventory[inventory.scrap_type == PIG_IRON].weight
+        inventory[inventory.scrap_type == PIG_IRON].weight.sum()
         + orders[orders.scrap_type == PIG_IRON].weight.sum()
     )
     shred_weight = (
-        inventory[inventory.scrap_type == SHRED].weight
+        inventory[inventory.scrap_type == SHRED].weight.sum()
         + orders[orders.scrap_type == SHRED].weight.sum()
     )
     skulls_weight = (
-        inventory[inventory.scrap_type == SKULLS].weight
+        inventory[inventory.scrap_type == SKULLS].weight.sum()
         + orders[orders.scrap_type == SKULLS].weight.sum()
     )
 
@@ -77,5 +77,11 @@ def get_scrap_inventory(inv_data_file, order_data_file):
     }
 
 
+def get_upcoming_heats(production_schedule_data_file):
+    # Load production schedule data
+    schedule = pd.read_json(production_schedule_data_file)
+    return schedule
+
+
 if __name__ == "__main__":
-    get_scrap_prices(sys.argv[1])
+    print(len(get_upcoming_heats(sys.argv[1])))
