@@ -103,7 +103,14 @@ def get_optimal_recipes():
     # sol = solvers.lp(obj_function_c, final_constraints_G, final_constraints_h)
     # print(sol["x"])
 
-    return {BUSHELING: 250, PIG_IRON: 250, SHRED: 300, SKULLS: 200}
+    # TODO: Temporary placeholder as lp solver giving an error
+    optimal_recipe_placeholder = (
+        "{BUSHELING: 250, PIG_IRON: 250, SHRED: 300, SKULLS: 200}"
+    )
+    upcoming_heats["recipe"] = optimal_recipe_placeholder
+
+    # Return production schedule with recipe column
+    return upcoming_heats
 
 
 if __name__ == "__main__":
