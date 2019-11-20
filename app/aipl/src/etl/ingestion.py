@@ -78,10 +78,15 @@ def get_scrap_inventory(inv_data_file, order_data_file):
 
 
 def get_upcoming_heats(production_schedule_data_file):
+    """Fetch the upcoming heats from the production schedule
+
+    Params:
+    production_schedule_data_file - Location of production schedule data
+    """
     # Load production schedule data
     schedule = pd.read_json(production_schedule_data_file)
     return schedule
 
 
 if __name__ == "__main__":
-    print(len(get_upcoming_heats(sys.argv[1])))
+    pass

@@ -3,7 +3,7 @@ import os
 import sys
 from cvxopt import matrix, spmatrix, sparse, solvers
 
-sys.path.insert(0, os.path.abspath("."))
+sys.path.insert(0, os.path.abspath("aipl/src"))
 from etl.ingestion import get_scrap_prices
 from etl.ingestion import get_scrap_inventory
 from etl.ingestion import get_upcoming_heats
@@ -20,13 +20,15 @@ REQD_WEIGHT = "required_weight"
 CHEM = "chemistry"
 CU_PCT = "cu_pct"
 # Data file locations
-DATA_DIR = r"../../../data/1/"
+DATA_DIR = r"../data/1/"
 SCRAP_ORDERS_DATAFILE = os.path.join(DATA_DIR, "scrap_orders.json")
 SCRAP_INV_DATAFILE = os.path.join(DATA_DIR, "scrap_inventory.json")
 PRODUCTION_SCHEDULE_DATA_FILE = os.path.join(DATA_DIR, "production_schedule.json")
 
 
 def get_cost_of_recipe(busheling_wt, pigiron_wt, shred_wt, skulls_wt):
+    """Calculates the cost of provided scrap-mix based on average scrap prices
+    """
     # Eventually implement FIFO-layering cost here
     scrap_prices = get_scrap_prices(SCRAP_ORDERS_DATAFILE)
     cost_of_recipe = (
@@ -39,15 +41,23 @@ def get_cost_of_recipe(busheling_wt, pigiron_wt, shred_wt, skulls_wt):
 
 
 def get_value_in_use_for_recipe(busheling_wt, pigiron_wt, shred_wt, skulls_wt):
+    """Calculates the value-in-use ($) for provided scrap-mix
+
+    Params:
+    busheling_wt - Weight of busheling scrap
+    pigiron_wt - Weight of pig iron
+    shred_wt - Weight of shred scrap
+    skulls_wt - Weight of skulls scrap
+    """
+    # Arguments can be generalized in the future
     return get_cost_of_recipe(busheling_wt, pigiron_wt, shred_wt, skulls_wt)
     # + get_cost_of_yield_loss(busheling_wt, pigiron_wt, shred_wt, skulls_wt)
 
 
-def get_available_inventory():
-    return get_scrap_inventory(SCRAP_INV_DATAFILE, SCRAP_ORDERS_DATAFILE)
-
-
 def get_optimal_recipes():
+    """Assigns an optimal recipe to all the upcoming heats present in the
+    production schedule
+    """
     # minimize cost over a sequence of heats
     upcoming_heats = get_upcoming_heats(PRODUCTION_SCHEDULE_DATA_FILE)
 
@@ -81,7 +91,7 @@ def get_optimal_recipes():
         np.arange(len(SCRAP_TYPES) * len(upcoming_heats)),
         (len(SCRAP_TYPES), len(SCRAP_TYPES) * len(upcoming_heats)),
     )
-    available_inv = get_available_inventory()
+    available_inv = get_scrap_inventory(SCRAP_INV_DATAFILE, SCRAP_ORDERS_DATAFILE)
     available_inv_h = matrix([int(available_inv[st]) for st in SCRAP_TYPES])
 
     # Required liquid steel constraint
@@ -114,4 +124,9 @@ def get_optimal_recipes():
 
 
 if __name__ == "__main__":
-    print(get_optimal_recipes())
+    print("Recipes for upcoming schedule\n{}".format(get_optimal_recipes()))
+    print(
+        "Value-in-use for recipe: ${0:.2f}".format(
+            get_value_in_use_for_recipe(250, 250, 300, 200)
+        )
+    )
